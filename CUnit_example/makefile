@@ -4,7 +4,7 @@ RM      = rm -rf
 RESULT  = main.o
 SOURCE  = main.c
 
-
+.PHONY: all main run clean compile_test
 all: clean main run clean 
 
 main: 
