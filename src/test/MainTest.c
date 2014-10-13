@@ -7,7 +7,7 @@
  
  static char * test_getHeapIndex() {
      int heapsCount = 4;
-     int heapsSize[] = {2, 3, 6, 10};
+     long heapsSize[] = {2, 3, 6, 10};
      mu_assert("Should find index of last heap, by max value", getHeapIndex(heapsSize, heapsCount, 10) == 3);
      mu_assert("Should be incorrect (-1), cos' value above max heap's size", getHeapIndex(heapsSize, heapsCount, 11) == -1);
      mu_assert("Should find firs heap, cos' min value", getHeapIndex(heapsSize, heapsCount, 1) == 0);
@@ -45,33 +45,34 @@
  }
  
   
- static char * test_getPointer() {
-     int heapSize = 100;
-     int heap[100] = {0};
-     int heapsCount = 5;
-     int heapsSize[5] = {2, 4, 8, 16, 32};
-     long heapsAddress[5] = {0};
-     heapsAddress[0] = (long)heap;
-     
-     printf("Heap: %lu\n", (long)heap);
-     
-     int offsetVarribles[5] = {0};
-     int countVarribleInsidHeap[5] = {3};
-     char varribles[100] = {0};
-     int size = 1;
-     
-     printf("Var: %d\n", varribles[0]);
-          
-     long s = getPointer(heap, heapsCount, heapsSize, heapsAddress, offsetVarribles, countVarribleInsidHeap, varribles, size);
-     
-     //mu_assert("Lol", heap == s);
-     
-     printf("Var: %d\n", varribles[0]);
-     printf("Heap: %lu\n", (long)&s);
-     
-     
-     return 0;
- }
+ 
+static char * test_getPointer() {
+    long heapSize = 100;
+    char heap[100] = {0};
+    int heapsCount = 5;
+    long heapsSize[5] = {2, 4, 8, 16, 32};
+    long heapsAddress[5] = {0};
+    heapsAddress[0] = (long)heap;
+
+    printf("Heap: %lu\n", (long)heap);
+
+    int offsetVarribles[5] = {0};
+    int countVarribleInsidHeap[5] = {3};
+    char varribles[100] = {0};
+    long size = 1;
+
+    printf("Var: %d\n", varribles[0]);
+
+    long s = getPointer((long)&heap, heapsCount, heapsSize, heapsAddress, offsetVarribles, countVarribleInsidHeap, varribles, size);
+    
+    //mu_assert("Lol", heap == s);
+
+    printf("Var: %d\n", varribles[0]);
+    printf("Heap: %lu\n", s);
+
+
+    return 0;
+}
  
  static char * all_tests() {
      mu_run_test(test_getHeapIndex);
