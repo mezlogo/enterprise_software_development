@@ -16,8 +16,8 @@ char heap[HEAP_SIZE];
 //Переменные
 char varribles[100] = {0};
 
-int heapsSize[HEAPS_COUNT];
-int heapsAddress[HEAPS_COUNT];
+long heapsSize[HEAPS_COUNT];
+long heapsAddress[HEAPS_COUNT];
 int countVarribleInsidHeap[HEAPS_COUNT];
 int offsetVarribles[HEAPS_COUNT];
 
@@ -28,12 +28,10 @@ int offsetVarribles[HEAPS_COUNT];
 .., если он существует, то "забиваем" его.
 
 */
-void* allocate(int size){
+char* allocate(int size){
     return getPointer(heap, HEAPS_COUNT, heapsSize, heapsAddress, offsetVarribles, countVarribleInsidHeap, varribles, size);
 }
 
-int main(int argc, char** argv) {
-
-    return (EXIT_SUCCESS);
+int removeVar(void* var){
+    return removePointer(var, HEAPS_COUNT, heapsSize, heapsAddress, offsetVarribles, varribles, HEAP_SIZE);
 }
-

@@ -47,3 +47,20 @@ char* getPointer(char* heap, int heapsCount, long* heapsSize, void** heapsAddres
     char* result = heapsAddress[heapIndex] + offsetVarible * heapsSize[heapIndex];
     return result;
 }
+
+//Реадизация удаления
+int removePointer(void* pointerToRemove, int heapsCount, long* heapsSize, void** heapsAddress, int* offsetVarribles, char* varribles, long heapSize){
+    if ((pointerToRemove < heapsAddress[0]) || (heapSize + heapsAddress[0] < pointerToRemove)) return -1;
+    
+    int heapIndex = 0;
+    
+    for(;heapIndex < heapsCount; heapIndex++)
+        if(heapsAddress[heapIndex] <= pointerToRemove)
+            break;
+    long offsetVarribleInsideHeap = (pointerToRemove - heapsAddress[heapIndex])/heapsSize[heapIndex];
+    
+    
+    varribles[offsetVarribles[heapIndex] + offsetVarribleInsideHeap] = 0;
+    
+    return 0;
+}

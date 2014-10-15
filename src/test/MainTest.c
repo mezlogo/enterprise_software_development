@@ -40,9 +40,59 @@
      mu_assert("Should correct find sum", sumOfArray(array, 2) == 13);
      mu_assert("Should correct find sum", sumOfArray(array, 3) == 18);
      mu_assert("Should incorrect find sum", sumOfArray(array, 1) != 0);
-     
-     
+       
      return 0;
+ }
+ 
+ static char * test_removePointer() {
+    long heapSize = 100;
+    char heap[100] = {0};
+    int heapsCount = 5;
+    int countVarribleInsidHeap[5] = {3, 3};
+    long heapsSize[5] = {2, 4, 8, 16, 32};
+    long heapsAddress[5] = {0};
+    heapsAddress[0] = (long)heap;
+    heapsAddress[1] = heapsAddress[0] + heapsSize[0] * countVarribleInsidHeap[0];
+    
+    void** heapsAddressPtr = (void**) heapsAddress;
+    
+    int offsetVarribles[5] = {0};
+    offsetVarribles[1] = 3;
+    char varribles[100] = {1, 1, 0, 1, 1, 0};  
+
+    void* pointerToRemove= (void*) heap;
+    int res = removePointer(pointerToRemove, heapsCount, heapsSize, heapsAddressPtr, offsetVarribles, varribles, heapSize);
+    
+    mu_assert("Should return 0", res == 0);
+    mu_assert("Should set first var to zero", varribles[0] == 0);
+    mu_assert("Should be 1, before remove", varribles[1] == 1);
+    
+    pointerToRemove= (void*) (heap + 2);
+    res = removePointer(pointerToRemove, heapsCount, heapsSize, heapsAddressPtr, offsetVarribles, varribles, heapSize);
+    
+    mu_assert("Should return 0, removing second var", res == 0);
+    mu_assert("Should second var eq 0", varribles[1] == 0);
+    
+    pointerToRemove= (void*) (heap + 2*3);
+    res = removePointer(pointerToRemove, heapsCount, heapsSize, heapsAddressPtr, offsetVarribles, varribles, heapSize);
+    mu_assert("Should return 0, removing four var", res == 0);
+    mu_assert("Should four var eq 0", varribles[4] == 0);
+      
+    pointerToRemove= (void*) (heap + 2*3 + 4);
+    res = removePointer(pointerToRemove, heapsCount, heapsSize, heapsAddressPtr, offsetVarribles, varribles, heapSize);
+    mu_assert("Should return 0, removing five var", res == 0);
+    mu_assert("Should five var eq 0", varribles[5] == 0);
+   
+    pointerToRemove= (void*) (heap - 10);
+    res = removePointer(pointerToRemove, heapsCount, heapsSize, heapsAddressPtr, offsetVarribles, varribles, heapSize);
+    mu_assert("Should return -1, removing pre heap address", res == -1);
+    
+    pointerToRemove= (void*) (heap + heapSize + 10);
+    res = removePointer(pointerToRemove, heapsCount, heapsSize, heapsAddressPtr, offsetVarribles, varribles, heapSize);
+    mu_assert("Should return -1, removing after heap address", res == -1);
+    
+   
+    return 0;
  }
  
 
@@ -98,7 +148,8 @@ static char * test_getPointer() {
      mu_run_test(test_findAndSetFreeVarribleIndex);
      mu_run_test(test_sumOfCharArray);
      mu_run_test(test_getPointer);
-    
+     mu_run_test(test_removePointer);
+     
      return 0;
  }
  
