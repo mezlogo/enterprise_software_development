@@ -16,10 +16,10 @@ char heap[HEAP_SIZE];
 //Переменные
 char varribles[100] = {0};
 
-int heapsSize[HEAP_SIZE];
-int heapsAddress[HEAP_SIZE];
-int countVarribleInsidHeap[HEAP_SIZE];
-int offsetVarribles[HEAP_SIZE];
+int heapsSize[HEAPS_COUNT];
+int heapsAddress[HEAPS_COUNT];
+int countVarribleInsidHeap[HEAPS_COUNT];
+int offsetVarribles[HEAPS_COUNT];
 
 /*
 "Выделение памяти"
