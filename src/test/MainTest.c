@@ -53,6 +53,7 @@
     long heapsAddress[5] = {0};
     heapsAddress[0] = (long)heap;
     heapsAddress[1] = heapsAddress[0] + heapsSize[0] * countVarribleInsidHeap[0];
+    heapsAddress[2] = heapsAddress[1] + heapsSize[1] * countVarribleInsidHeap[1];
     
     void** heapsAddressPtr = (void**) heapsAddress;
     
@@ -76,12 +77,12 @@
     pointerToRemove= (void*) (heap + 2*3);
     res = removePointer(pointerToRemove, heapsCount, heapsSize, heapsAddressPtr, offsetVarribles, varribles, heapSize);
     mu_assert("Should return 0, removing four var", res == 0);
-    mu_assert("Should four var eq 0", varribles[4] == 0);
+    mu_assert("Should four var eq 0", varribles[3] == 0);
       
     pointerToRemove= (void*) (heap + 2*3 + 4);
     res = removePointer(pointerToRemove, heapsCount, heapsSize, heapsAddressPtr, offsetVarribles, varribles, heapSize);
     mu_assert("Should return 0, removing five var", res == 0);
-    mu_assert("Should five var eq 0", varribles[5] == 0);
+    mu_assert("Should five var eq 0", varribles[4] == 0);
    
     pointerToRemove= (void*) (heap - 10);
     res = removePointer(pointerToRemove, heapsCount, heapsSize, heapsAddressPtr, offsetVarribles, varribles, heapSize);

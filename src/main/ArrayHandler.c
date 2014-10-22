@@ -13,7 +13,7 @@ int getHeapIndex(long* heapsSize, int heapsCount, int needSize){
 }
 
 //2) Получаем индекс-смещение для данной под-кучи, среди всех переменных кучи
-//.., если он существует, то "забиваем" его.
+//.., если он существует, то "забиваем" его еденичкой.
 int findAndSetFreeVarribleIndex(char* varribles, int currentVarribleSize){
     int index = 0;
     for(; index < currentVarribleSize; index++)
@@ -34,16 +34,15 @@ int sumOfArray(int* array, int size){
 //Реализация нахождаения места в кучи, и возвращение указателя на нее
 char* getPointer(char* heap, int heapsCount, long* heapsSize, void** heapsAddress, int* offsetVarribles, int* countVarribleInsidHeap, char* varribles, long size){
     int heapIndex = getHeapIndex(heapsSize, heapsCount, size);
-    if(heapIndex < 0){
-        printf("There is no heap, which can store those size");
-        return NULL;
-    }
+    if(heapIndex < 0) return NULL;
+    
     int offsetVarible = -1;
     for(;heapIndex < heapsCount; heapIndex++){
         int varribleOffsetInsideCurrentHeap = offsetVarribles[heapIndex];
         offsetVarible = findAndSetFreeVarribleIndex(&varribles[varribleOffsetInsideCurrentHeap], countVarribleInsidHeap[heapIndex]);
         if (0 <= offsetVarible) break;
-    } 
+    }
+    
     char* result = heapsAddress[heapIndex] + offsetVarible * heapsSize[heapIndex];
     return result;
 }
@@ -55,7 +54,7 @@ int removePointer(void* pointerToRemove, int heapsCount, long* heapsSize, void**
     int heapIndex = 0;
     
     for(;heapIndex < heapsCount; heapIndex++)
-        if(heapsAddress[heapIndex] <= pointerToRemove)
+        if(pointerToRemove < heapsAddress[heapIndex + 1])
             break;
     long offsetVarribleInsideHeap = (pointerToRemove - heapsAddress[heapIndex])/heapsSize[heapIndex];
     

@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "ArrayHandler.h"
+
 /*Представляем основной модуль реализующий управление памяти*/
 
 
@@ -24,14 +26,16 @@ int offsetVarribles[HEAPS_COUNT];
 /*
 "Выделение памяти"
 1) Находим индекс под-кучи в которой может храниться данная переменная.
-2) Получаем индекс-смещение для данной под-кучи, среди всех переменных кучи (иначе инкремент кучи, и т.д) 
+2) Получаем индекс-смещение дял массива переменных данной под-кучи, среди всех переменных кучи (иначе инкремент кучи, и т.д) 
 .., если он существует, то "забиваем" его.
-
+3) 
 */
 char* allocate(int size){
     return getPointer(heap, HEAPS_COUNT, heapsSize, heapsAddress, offsetVarribles, countVarribleInsidHeap, varribles, size);
 }
 
 int removeVar(void* var){
-    return removePointer(var, HEAPS_COUNT, heapsSize, heapsAddress, offsetVarribles, varribles, HEAP_SIZE);
+    return removePointer(var, HEAPS_COUNT, heapsSize, (void**) heapsAddress, offsetVarribles, varribles, HEAP_SIZE);
 }
+
+int main(int argc, char **argv) {return 0;}

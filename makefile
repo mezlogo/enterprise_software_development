@@ -1,4 +1,6 @@
-all: clean make_build_dir compile compile_test 
+all: clean make_build_dir compile
+
+default: clean make_build_dir compile_test
 
 build_run: clean make_build_dir compile compile_test run clean
 
