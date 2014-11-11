@@ -2,6 +2,13 @@
 #include <stdlib.h>
 
 
+int findHeapIndexBySize(long* heapsSize, int heapsCount, int allocateSize){
+    int index = 0;
+    for(; index < heapsCount; index++)
+        if (allocateSize <= heapsSize[index])
+            break;
+    return index;
+}
 
 //1) Находим индекс под-кучи в которой может храниться данная переменная.
 int getHeapIndex(long* heapsSize, int heapsCount, int needSize){

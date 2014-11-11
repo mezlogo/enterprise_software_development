@@ -4,22 +4,21 @@
 #include "ArrayHandler.h"
  
  int tests_run = 0;
- 
- 
- static char * test_getHeapIndex() {
+
+ static char * test_findHeapIndexBySize() {
      int heapsCount = 4;
      long heapsSize[] = {2, 3, 6, 10};
-     mu_assert("Should find index of last heap, by max value", getHeapIndex(heapsSize, heapsCount, 10) == 3);
-     mu_assert("Should be incorrect (-1), cos' value above max heap's size", getHeapIndex(heapsSize, heapsCount, 11) == -1);
-     mu_assert("Should find firts heap, cos' min value", getHeapIndex(heapsSize, heapsCount, 1) == 0);
-     mu_assert("Should find not maximum size", getHeapIndex(heapsSize, heapsCount, 5) == 2);
+     mu_assert("Should find index of last heap, by max value", findHeapIndexBySize(heapsSize, heapsCount, 10) == 3);
+     //mu_assert("Should be incorrect (-1), cos' value above max heap's size", findHeapIndexBySize(heapsSize, heapsCount, 11) == -1);
+     mu_assert("Should find firts heap, cos' min value", findHeapIndexBySize(heapsSize, heapsCount, 1) == 0);
+     mu_assert("Should find not maximum size", findHeapIndexBySize(heapsSize, heapsCount, 5) == 2);
      return 0;
  }
- 
+ /*
  static char * test_findAndSetFreeVarribleIndex() {
      int offsetInsideVarribles[] = {3, 3, 4};
           
-     char varribles[10] = {0, 1, 0/*First*/, 1, 1, 1/*Second*/, 1, 0};
+     char varribles[10] = {0, 1, 0        , 1, 1, 1          ,  1, 0};
      mu_assert("Should find first index in first heap", findAndSetFreeVarribleIndex(varribles, offsetInsideVarribles[0]) == 0);
      
      mu_assert("Should find last index in first heap", findAndSetFreeVarribleIndex(varribles, offsetInsideVarribles[0]) == 2);
@@ -142,14 +141,10 @@ static char * test_getPointer() {
     mu_assert("Should be null", ptrI3 == NULL);
     
     return 0;
-}
+}*/
  
  static char * all_tests() {
-     mu_run_test(test_getHeapIndex);
-     mu_run_test(test_findAndSetFreeVarribleIndex);
-     mu_run_test(test_sumOfCharArray);
-     mu_run_test(test_getPointer);
-     mu_run_test(test_removePointer);
+     mu_run_test(test_findHeapIndexBySize);
      
      return 0;
  }

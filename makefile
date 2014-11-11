@@ -1,4 +1,4 @@
-all: clean make_build_dir compile_memory_manager compile_unit_test unit_test clean
+all: clean make_build_dir compile_unit_test
 
 make_build_dir: clean
 	mkdir build
@@ -6,10 +6,10 @@ make_build_dir: clean
 compile_memory_manager: make_build_dir
 	gcc src/main/ArrayHandler.c src/main/MemoryManager.c -o build/main -Isrc/main
 
-compile_unit_test: compile_memory_manager
-	gcc -DDEBUG -g src/main/ArrayHandler.c src/test/MainTest.c -o build/test -Ilib -Isrc/main
+compile_unit_test: make_build_dir
+	gcc src/main/ArrayHandler.c src/test/MainTest.c -o build/test -Ilib -Isrc/main
 
-unit_test: compile_unit_test
+test: compile_unit_test
 	./build/test
 
 clean:
