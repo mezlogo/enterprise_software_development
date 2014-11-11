@@ -1,20 +1,20 @@
-all: clean make_build_dir compile
+all: clean make_build_dir compile_memory_manager compile_unit_test unit_test clean
 
-default: clean make_build_dir compile_test
-
-build_run: clean make_build_dir compile compile_test run clean
-
-make_build_dir:
+make_build_dir: clean
 	mkdir build
 
-compile:
-	gcc -DDEBUG -g src/main/ArrayHandler.c src/main/MemoryManager.c -o build/main -Isrc/main
+compile_memory_manager: make_build_dir
+	gcc src/main/ArrayHandler.c src/main/MemoryManager.c -o build/main -Isrc/main
 
-compile_test:
+compile_unit_test: compile_memory_manager
 	gcc -DDEBUG -g src/main/ArrayHandler.c src/test/MainTest.c -o build/test -Ilib -Isrc/main
 
-run:
+unit_test: compile_unit_test
 	./build/test
 
 clean:
 	rm -rf build
+
+fork: make_build_dir
+	gcc src/test/ForkExample.c -o build/fork
+	./build/fork
