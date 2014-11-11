@@ -1,13 +1,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
 int findHeapIndexBySize(long* heapsSize, int heapsCount, int allocateSize){
     int index = 0;
     for(; index < heapsCount; index++)
         if (allocateSize <= heapsSize[index])
             break;
     return index;
+}
+
+int findAndSetVariableIndex(char* varibles, int varibleCount){
+    int index = 0;
+    for(; index < varibleCount; index++)
+        if (varibles[index] == 0)
+            break;
+    
+    if (index == varibleCount) return -1;
+    
+    varibles[index] = 1;
+    return index;    
 }
 
 //1) Находим индекс под-кучи в которой может храниться данная переменная.

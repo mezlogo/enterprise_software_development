@@ -7,10 +7,10 @@ compile_memory_manager: make_build_dir
 	gcc src/main/ArrayHandler.c src/main/MemoryManager.c -o build/main -Isrc/main
 
 compile_unit_test: make_build_dir
-	gcc src/main/ArrayHandler.c src/test/MainTest.c -o build/test -Ilib -Isrc/main
+	gcc src/main/ArrayHandler.c src/test/ArrayHandlerTest.c -o build/ArrayHandlerTest -Ilib -Isrc/main
 
 test: compile_unit_test
-	./build/test
+	./build/ArrayHandlerTest
 
 clean:
 	rm -rf build

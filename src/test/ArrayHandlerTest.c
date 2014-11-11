@@ -6,13 +6,25 @@
  int tests_run = 0;
 
  static char * test_findHeapIndexBySize() {
-     int heapsCount = 4;
-     long heapsSize[] = {2, 3, 6, 10};
-     mu_assert("Should find index of last heap, by max value", findHeapIndexBySize(heapsSize, heapsCount, 10) == 3);
-     //mu_assert("Should be incorrect (-1), cos' value above max heap's size", findHeapIndexBySize(heapsSize, heapsCount, 11) == -1);
-     mu_assert("Should find firts heap, cos' min value", findHeapIndexBySize(heapsSize, heapsCount, 1) == 0);
-     mu_assert("Should find not maximum size", findHeapIndexBySize(heapsSize, heapsCount, 5) == 2);
-     return 0;
+    int heapsCount = 4;
+    long heapsSize[] = {2, 3, 6, 10};
+    mu_assert("Should find index of last heap, by max value", findHeapIndexBySize(heapsSize, heapsCount, 10) == 3);
+    //mu_assert("Should be incorrect (-1), cos' value above max heap's size", findHeapIndexBySize(heapsSize, heapsCount, 11) == -1);
+    mu_assert("Should find firts heap, cos' min value", findHeapIndexBySize(heapsSize, heapsCount, 1) == 0);
+    mu_assert("Should find not maximum size", findHeapIndexBySize(heapsSize, heapsCount, 5) == 2);
+    return 0;
+ }
+ 
+ static char * test_findAndSetVariableIndex() {
+    int variblesCount = 10;
+    char varibles [10] = {0};
+    mu_assert("Should return first varibles index and set 1", findAndSetVariableIndex(varibles, variblesCount) == 0 && varibles[0] == 1);
+
+    mu_assert("Should return last varibles, by 9 offset varybles, index and set 1", findAndSetVariableIndex(varibles + 9, 1) == 0 && varibles[9] == 1);
+
+    mu_assert("Should return error, cos' no one empty var found", findAndSetVariableIndex(varibles + 9, 1) == -1 && varibles[9] == 1);
+    
+    return 0;
  }
  /*
  static char * test_findAndSetFreeVarribleIndex() {
@@ -145,7 +157,7 @@ static char * test_getPointer() {
  
  static char * all_tests() {
      mu_run_test(test_findHeapIndexBySize);
-     
+     mu_run_test(test_findAndSetVariableIndex);
      return 0;
  }
  
