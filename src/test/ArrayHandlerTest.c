@@ -3,9 +3,9 @@
 #include "minunit.h"
 #include "ArrayHandler.h"
  
- int tests_run = 0;
-
- static char * test_findHeapIndexBySize() {
+ 
+int tests_run = 0;
+static char * test_findHeapIndexBySize() {
     int heapsCount = 4;
     long heapsSize[] = {2, 3, 6, 10};
     mu_assert("Should find index of last heap, by max value", findHeapIndexBySize(heapsSize, heapsCount, 10) == 3);
@@ -22,7 +22,11 @@
 
     mu_assert("Should return last varibles, by 9 offset varybles, index and set 1", findAndSetVariableIndex(varibles + 9, 1) == 0 && varibles[9] == 1);
 
-    mu_assert("Should return error, cos' no one empty var found", findAndSetVariableIndex(varibles + 9, 1) == -1 && varibles[9] == 1);
+    mu_assert("Should return error, cos' last var isn't empty, by offset 9", findAndSetVariableIndex(varibles + 9, 1) == -1 && varibles[9] == 1);
+    
+    mu_assert("Should return 8 varibles index and set 1", findAndSetVariableIndex(varibles + 8, 2) == 0 && varibles[8] == 1);
+
+    mu_assert("Should return error, cos' no one empty var found by offset 8", findAndSetVariableIndex(varibles + 8, 2) == -1 && varibles[8] == 1);
     
     return 0;
  }
