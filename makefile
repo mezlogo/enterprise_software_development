@@ -1,15 +1,17 @@
-all: test
+$CompileAR = ar -crsv build/ArrayHandler.a build/ArrayHandler.o
+
+all: run_array_handler_test
 
 make_build_dir: clean
 	mkdir build
 
-compile_memory_manager: make_build_dir
-	gcc src/main/ArrayHandler.c src/main/MemoryManager.c -o build/main -Isrc/main
+compile_array_handler: make_build_dir
+	gcc -c src/main/implement/ArrayHandler.c -o build/ArrayHandler.o 
+	
+compile_array_handler_test: compile_array_handler
+	gcc -DEBUG -g build/ArrayHandler.o src/test/ArrayHandlerTest.c -o build/ArrayHandlerTest -Ilib -Isrc/main/header
 
-compile_unit_test: make_build_dir
-	gcc -DEBUG -g src/main/ArrayHandler.c src/test/ArrayHandlerTest.c -o build/ArrayHandlerTest -Ilib -Isrc/main
-
-test: compile_unit_test
+run_array_handler_test: compile_array_handler_test
 	./build/ArrayHandlerTest
 
 clean:
