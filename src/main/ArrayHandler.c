@@ -21,63 +21,53 @@ int findAndSetVariableIndex(char* varibles, int varibleCount){
     return index;    
 }
 
-//1) Находим индекс под-кучи в которой может храниться данная переменная.
-int getHeapIndex(long* heapsSize, int heapsCount, int needSize){
+int isAscendingOrder(int* heapsSize, int heapCount){
+    int prev = 0;
+    int index = 0;
+    for(; index < heapCount; index++)
+        if (prev < heapsSize[index]) prev = heapsSize[index];
+        else return index;
+    return -1;
+}
+
+int findHeapIndexByPointer(char** heapsAddress, int heapsCount, char* pointer){
+    int index = heapsCount - 1;
+    for(; 0 <= index; index--)
+        if(heapsAddress[index] <= pointer)
+            break;
+    
+    return index;
+}
+
+long sumOfHeapByVarCountAndSize(int* heapsSize, int* heapsVariables, int heapsCount){
+    long result = 0;
     int index = 0;
     for(; index < heapsCount; index++)
-        if (needSize <= heapsSize[index])
-            return index;
-    return -1;
-}
-
-//2) Получаем индекс-смещение для данной под-кучи, среди всех переменных кучи
-//.., если он существует, то "забиваем" его еденичкой.
-int findAndSetFreeVarribleIndex(char* varribles, int currentVarribleSize){
-    int index = 0;
-    for(; index < currentVarribleSize; index++)
-        if (0 == varribles[index]){ varribles[index] = 1; return index; }
-        
-    return -1;
-}
-
-int sumOfArray(int* array, int size){
-    int result = 0;
-    int index = 0;
-    for(; index < size; index++)
-        result += array[index];
+        if (heapsSize[index] <= 0 || heapsVariables[index] <= 0) {result = -1; break;}
+        else result = result + heapsSize[index] * heapsVariables[index];
     
     return result;
 }
 
-//Реализация нахождаения места в кучи, и возвращение указателя на нее
-char* getPointer(char* heap, int heapsCount, long* heapsSize, void** heapsAddress, int* offsetVarribles, int* countVarribleInsidHeap, char* varribles, long size){
-    int heapIndex = getHeapIndex(heapsSize, heapsCount, size);
-    if(heapIndex < 0) return NULL;
-    
-    int offsetVarible = -1;
-    for(;heapIndex < heapsCount; heapIndex++){
-        int varribleOffsetInsideCurrentHeap = offsetVarribles[heapIndex];
-        offsetVarible = findAndSetFreeVarribleIndex(&varribles[varribleOffsetInsideCurrentHeap], countVarribleInsidHeap[heapIndex]);
-        if (0 <= offsetVarible) break;
+
+int initHeapsAddress(char** heapsAddress, char* heap, int* heapsSize, int* heapsVariables, int heapsCount){
+    heapsAddress[0] = heap;
+    int index = 1;
+    long offset = 0;
+    for(; index < heapsCount; index++){
+        offset = offset + heapsSize[index - 1] * heapsVariables[index - 1];
+        heapsAddress[index] = heap + offset;
     }
-    
-    char* result = heapsAddress[heapIndex] + offsetVarible * heapsSize[heapIndex];
-    return result;
+    return 1;        
 }
 
-//Реадизация удаления
-int removePointer(void* pointerToRemove, int heapsCount, long* heapsSize, void** heapsAddress, int* offsetVarribles, char* varribles, long heapSize){
-    if ((pointerToRemove < heapsAddress[0]) || (heapSize + heapsAddress[0] < pointerToRemove)) return -1;
-    
-    int heapIndex = 0;
-    
-    for(;heapIndex < heapsCount; heapIndex++)
-        if(pointerToRemove < heapsAddress[heapIndex + 1])
-            break;
-    long offsetVarribleInsideHeap = (pointerToRemove - heapsAddress[heapIndex])/heapsSize[heapIndex];
-    
-    
-    varribles[offsetVarribles[heapIndex] + offsetVarribleInsideHeap] = 0;
-    
-    return 0;
+int initHeapsVariables(char** heapsAddressVariables, char* variables, int* heapsVariables, int heapsCount){
+    heapsAddressVariables[0] = variables;
+    int index = 1;
+    long offset = 0;
+    for(; index < heapsCount; index++){
+        offset = offset + heapsVariables[index - 1];
+        heapsAddressVariables[index] = variables + offset;
+    }
+    return 1;
 }
