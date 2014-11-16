@@ -11,3 +11,5 @@ long sumOfHeapByVarCountAndSize(int* heapsSize, int* heapsVariables, int heapsCo
 int initHeapsAddress(char** heapsAddress, char* heap, int* heapsSize, int* heapsVariables, int heapsCount);
 
 int initHeapsVariables(char** heapsAddressVariables, char* variables, int* heapsVariables, int heapsCount);
+
+int resetAllChars(char* heapsVariables, int variablesCount);

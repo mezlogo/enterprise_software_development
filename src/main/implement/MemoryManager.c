@@ -4,24 +4,27 @@
 
 /*Представляем основной модуль реализующий управление памяти*/
 
-
 ////////
 //Поля//
 ////////
 //Количество подкуч. Каждая подкуча содержит переменные определенного размера
-#define HEAPS_COUNT 5
+
 //Собственно количество байт для хранения
-#define HEAP_SIZE 100000
-
+#define TOTAL_HEAP_SIZE 100000
+#define MAX_HEAPS_COUNT 10
+#define MAX_VARIABLES 100
 //Память-куча для хранения данных
-char heap[HEAP_SIZE];
+char heap[TOTAL_HEAP_SIZE];
 //Переменные
-char varribles[100] = {0};
+char heapsCount;
+char total_variables[MAX_VARIABLES] = {0};
+int heapsVariablesCount[MAX_HEAPS_COUNT];
+int heapsVariableSize[MAX_HEAPS_COUNT];
 
-long heapsSize[HEAPS_COUNT];
-long heapsAddress[HEAPS_COUNT];
-int countVarribleInsidHeap[HEAPS_COUNT];
-int offsetVarribles[HEAPS_COUNT];
+long heapsSize[MAX_HEAPS_COUNT];
+char* heapsAddress[MAX_HEAPS_COUNT];
+int countVarribleInsidHeap[MAX_HEAPS_COUNT];
+int offsetVarribles[MAX_HEAPS_COUNT];
 
 /***@
  * Функция: "Выделения памяти"
@@ -42,7 +45,7 @@ int offsetVarribles[HEAPS_COUNT];
  * 4) Возвращаем полученное значение
 @***/
 char* allocate(int size){
-    return getPointer(heap, HEAPS_COUNT, heapsSize, heapsAddress, offsetVarribles, countVarribleInsidHeap, varribles, size);
+    return heap;
 }
 
 /***@
@@ -61,7 +64,7 @@ char* allocate(int size){
  * 4) Устанавливаем массив переменных 0, для данной подкучи с данным смещением
 @***/
 int removeVar(void* var){
-    return removePointer(var, HEAPS_COUNT, heapsSize, (void**) heapsAddress, offsetVarribles, varribles, HEAP_SIZE);
+    return 1;
 }
 
 /***@
@@ -83,5 +86,12 @@ int removeVar(void* var){
  * - Массив указателей на начало каждой подкучи, внутри кучи
  * - Массив указателей на начало переменных для каждой подкучи, внутри массива переменных
 @***/
-
-int main(int argc, char **argv) {return 0;}
+int initHeap(char _heapsCount, int* _heapsVariableSize, int* _heapsVariablesCount){
+    if (MAX_HEAPS_COUNT < _heapsCount || TOTAL_HEAP_SIZE < sumOfHeapByVarCountAndSize(_heapsVariableSize, _heapsVariablesCount, _heapsCount) || 0 <= isAscendingOrder(_heapsVariableSize, _heapsCount)) return -1;
+    
+    resetAllChars(total_variables, MAX_VARIABLES);
+    
+    
+    
+    return 1;
+}

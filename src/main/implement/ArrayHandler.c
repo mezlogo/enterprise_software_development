@@ -71,3 +71,11 @@ int initHeapsVariables(char** heapsAddressVariables, char* variables, int* heaps
     }
     return 1;
 }
+
+int resetAllChars(char* heapsVariables, int variablesCount){
+    int index = 0;
+    for(; index < variablesCount; index++){
+        heapsVariables[index] = 0;
+    }
+    return 1;
+}

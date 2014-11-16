@@ -32,6 +32,15 @@ static char * test_findAndSetVariableIndex() {
     return 0;
 }
 
+static char * test_resetAllChars() {
+    char vars[100] = {1};
+    resetAllChars(vars, 100);
+    int index = 0;
+    for(; index < 100; index++){
+        mu_assert("Should reseting to 0", vars[index] == 0);
+    }
+}
+
 static char * test_isAscendingOrder() {
     int heapCount = 4;
     int heapSize [4] = {1, 3, 4, 5};
@@ -145,7 +154,8 @@ static char * all_tests() {
     mu_run_test(test_sumOfHeapByVarCountAndSize);
     mu_run_test(test_initHeapsAddress);
     mu_run_test(test_initHeapsVariables);
-    
+    mu_run_test(test_resetAllChars);
+
     return 0;
 }
 
