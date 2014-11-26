@@ -11,9 +11,6 @@ ARCHIVE = ar -crsv
 RECURSIVE_REMOVE = rm -rf
 CREATE_DIRS = mkdir
 
-$CompileAR = ar -crsv ${BUILD_DIR}/ArrayHandler.a ${BUILD_DIR}/ArrayHandler.o
-
-
 ARRAY_HANDLER_OBJECT = ${BUILD_DIR}/ArrayHandler.o
 SUBHEAP_HANDLER_OBJECT = ${BUILD_DIR}/SubheapHandler.o
 
@@ -21,9 +18,7 @@ SUBHEAP_HANDLER_OBJECT = ${BUILD_DIR}/SubheapHandler.o
 START_MSG = @echo "<--------Start compile and testing"
 END_MSG = @echo "<--------End compile and testing"
 
-sfsf = gcc ${MEMORY_MANAGER_IMPLEMENT_DIR}/ArrayHandler.c ${MEMORY_MANAGER_IMPLEMENT_DIR}/MemoryManager.c ${TEST_DIR}/MemoryManagerTest.c -o ${BUILD_DIR}/MemoryManagerTest -I${TEST_FRMAWORK_DIR}  -I${HEADERS_DIR}
-
-all: compile_and_test_subheap_handler
+all: compile_and_test_array_handler
 
 make_build_dir: clean
 	${CREATE_DIRS} ${BUILD_DIR}
@@ -36,6 +31,14 @@ compile_and_test_subheap_handler: make_build_dir
 	./${BUILD_DIR}/SubheapHandlerTest
 	${END_MSG} subheap_handler
 	
+compile_and_test_array_handler: make_build_dir
+	${START_MSG} array_handler
+	${COMPILE} -c ${MEMORY_MANAGER_IMPLEMENT_DIR}/ArrayHandler.c -o ${ARRAY_HANDLER_OBJECT} -I${HEADERS_DIR}	
+	${ARCHIVE} ${BUILD_DIR}/libArrayHandler.a ${ARRAY_HANDLER_OBJECT}
+	${COMPILE} -DEBUG -g ${TEST_DIR}/ArrayHandlerTest.c -o ${BUILD_DIR}/ArrayHandlerTest -I${TEST_FRMAWORK_DIR} -L${BUILD_DIR} -lArrayHandler -I${HEADERS_DIR}	
+	./${BUILD_DIR}/ArrayHandlerTest
+	${END_MSG} array_handler
+
 compile_array_handler: make_build_dir
 	${COMPILE} -c ${MEMORY_MANAGER_IMPLEMENT_DIR}/ArrayHandler.c -o ${ARRAY_HANDLER_OBJECT}
 

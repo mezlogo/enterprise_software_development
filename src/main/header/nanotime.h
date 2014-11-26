@@ -5,6 +5,12 @@
 #include <sys/time.h>
 #include <stdint.h>
 
+/*Use case:
+#include <inttypes.h>
+#include "nanotime.h"
+struct nanotime now = nanotime_utc_now();
+printf("%" PRIu64 "\n", now.ns);*/
+
 
 struct nanotime {
   uint64_t ns;

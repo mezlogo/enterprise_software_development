@@ -3,8 +3,6 @@
 #include "minunit.h"
 #include "ArrayHandler.h"
 
-#include <inttypes.h>
-#include "nanotime.h"
 
 int tests_run = 0;
 
@@ -23,12 +21,8 @@ static char * test_findFirstZero() {
 	mu_assert("Shouldn't find 0", findFirstZero(array, length) == -1);
 
 	mu_assert("Should find 5 elem as 0, from 5 length array", findFirstZero(array, length + 1) == 4);
-
-	struct nanotime now = nanotime_utc_now();
-
-	printf("%" PRIu64 "\n", now.ns);
-
-    return 0;
+	
+	return 0;
 }
 
 static char * all_tests() {
