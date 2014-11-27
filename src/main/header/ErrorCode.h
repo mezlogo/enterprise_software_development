@@ -1,0 +1,13 @@
+#ifndef ERROR_CODE_H
+#define ERROR_CODE_H
+
+//Success
+#define ONLY_POSITIVES -1
+#define ONLY_ACSENDING -1
+
+//Fail
+#define ZERO_NOT_FOUND -1
+#define INITIAL_INPUT_PARAMS_ERROR -1
+#define INITIAL_ERROR_MANAGER_TOO_SMALL -2
+
+#endif /*ERROR_CODE_H*/

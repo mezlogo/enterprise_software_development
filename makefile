@@ -13,16 +13,24 @@ CREATE_DIRS = mkdir
 
 ARRAY_HANDLER_OBJECT = ${BUILD_DIR}/ArrayHandler.o
 SUBHEAP_HANDLER_OBJECT = ${BUILD_DIR}/SubheapHandler.o
-
+MEMORY_MANAGER_OBJECT = ${BUILD_DIR}/MemoryManager.o
 
 START_MSG = @echo "<--------Start compile and testing"
 END_MSG = @echo "<--------End compile and testing"
 
-all: compile_and_test_array_handler
+all: compile_and_test_memory_manager
 
 make_build_dir: clean
 	${CREATE_DIRS} ${BUILD_DIR}
 
+compile_and_test_array_handler: make_build_dir
+	${START_MSG} array_handler
+	${COMPILE} -c ${MEMORY_MANAGER_IMPLEMENT_DIR}/ArrayHandler.c -o ${ARRAY_HANDLER_OBJECT} -I${HEADERS_DIR}	
+	${ARCHIVE} ${BUILD_DIR}/libArrayHandler.a ${ARRAY_HANDLER_OBJECT}
+	${COMPILE} -DEBUG -g ${TEST_DIR}/ArrayHandlerTest.c -o ${BUILD_DIR}/ArrayHandlerTest -I${TEST_FRMAWORK_DIR} -L${BUILD_DIR} -lArrayHandler -I${HEADERS_DIR}	
+	./${BUILD_DIR}/ArrayHandlerTest
+	${END_MSG} array_handler
+	
 compile_and_test_subheap_handler: make_build_dir
 	${START_MSG} subheap_handler
 	${COMPILE} -c ${MEMORY_MANAGER_IMPLEMENT_DIR}/SubheapHandler.c -o ${SUBHEAP_HANDLER_OBJECT} -I${HEADERS_DIR}	
@@ -31,37 +39,14 @@ compile_and_test_subheap_handler: make_build_dir
 	./${BUILD_DIR}/SubheapHandlerTest
 	${END_MSG} subheap_handler
 	
-compile_and_test_array_handler: make_build_dir
-	${START_MSG} array_handler
-	${COMPILE} -c ${MEMORY_MANAGER_IMPLEMENT_DIR}/ArrayHandler.c -o ${ARRAY_HANDLER_OBJECT} -I${HEADERS_DIR}	
-	${ARCHIVE} ${BUILD_DIR}/libArrayHandler.a ${ARRAY_HANDLER_OBJECT}
-	${COMPILE} -DEBUG -g ${TEST_DIR}/ArrayHandlerTest.c -o ${BUILD_DIR}/ArrayHandlerTest -I${TEST_FRMAWORK_DIR} -L${BUILD_DIR} -lArrayHandler -I${HEADERS_DIR}	
-	./${BUILD_DIR}/ArrayHandlerTest
-	${END_MSG} array_handler
 
-compile_array_handler: make_build_dir
-	${COMPILE} -c ${MEMORY_MANAGER_IMPLEMENT_DIR}/ArrayHandler.c -o ${ARRAY_HANDLER_OBJECT}
-
-make_array_hanlder_lib: compile_array_handler
-	ar -crsv ${BUILD_DIR}/libArrayHandler.a ${BUILD_DIR}/ArrayHandler.o
-	
-compile_array_handler_test: make_array_hanlder_lib
-	${COMPILE} -DEBUG -g ${MEMORY_MANAGER_IMPLEMENT_DIR}/nanotime.c ${TEST_DIR}/ArrayHandlerTest.c -o ${BUILD_DIR}/ArrayHandlerTest -I${TEST_FRMAWORK_DIR} -L${BUILD_DIR} -lArrayHandler -I${HEADERS_DIR}
-
-run_array_handler_test: compile_array_handler_test
-	./${BUILD_DIR}/ArrayHandlerTest
-
-compile_memory_manager: run_array_handler_test
-	${COMPILE} -c ${MEMORY_MANAGER_IMPLEMENT_DIR}/MemoryManager.c -o ${BUILD_DIR}/MemoryManager.o -I${HEADERS_DIR}
-
-make_memory_manager_lib: compile_memory_manager
-	ar -crsv ${BUILD_DIR}/libMemoryManager.a ${BUILD_DIR}/MemoryManager.o ${ARRAY_HANDLER_OBJECT}
-
-compile_memory_manager_test: make_memory_manager_lib
+compile_and_test_memory_manager: compile_and_test_array_handler compile_and_test_subheap_handler
+	${START_MSG} memory_manager
+	${COMPILE} -c ${MEMORY_MANAGER_IMPLEMENT_DIR}/MemoryManager.c -o ${MEMORY_MANAGER_OBJECT} -I${HEADERS_DIR}	
+	${ARCHIVE} ${BUILD_DIR}/libMemoryManager.a ${MEMORY_MANAGER_OBJECT} ${SUBHEAP_HANDLER_OBJECT} ${ARRAY_HANDLER_OBJECT}
 	${COMPILE} -DEBUG -g ${TEST_DIR}/MemoryManagerTest.c -o ${BUILD_DIR}/MemoryManagerTest -I${TEST_FRMAWORK_DIR} -L${BUILD_DIR} -lMemoryManager -I${HEADERS_DIR}	
-
-run_memory_manager_test: compile_memory_manager_test
 	./${BUILD_DIR}/MemoryManagerTest
+	${END_MSG} memory_manager
 
 clean:
 	${RECURSIVE_REMOVE} ${BUILD_DIR}
