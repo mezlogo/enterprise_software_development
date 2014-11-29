@@ -1,8 +1,5 @@
 #include "Subheap.h"
-
-char* allocate(int size);
-
-int removeVar(void* var);
+#include "MemoryManager.h"
 
 int init(int* variablesSize, int* variablesCount, int subheapCount);
 
