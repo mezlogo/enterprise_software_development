@@ -1,6 +1,6 @@
 #include "Subheap.h"
 
-char findHeapIndexBySize(struct Subheap  * subheaps, char subheapCount, int size){
+char findHeapIndexBySize(Subheap  * subheaps, char subheapCount, int size){
 	char index = 0;
 	
 	for(; index < subheapCount; index++)
@@ -10,7 +10,7 @@ char findHeapIndexBySize(struct Subheap  * subheaps, char subheapCount, int size
 	return index;
 }
 
-char findHeapIndexByPointer(struct Subheap * subheaps, char subheapCount, char * variable){
+char findHeapIndexByPointer(Subheap * subheaps, char subheapCount, char * variable){
 	char index = subheapCount - 1;
 	
 	for(; 0 <= index; index--)
@@ -18,4 +18,27 @@ char findHeapIndexByPointer(struct Subheap * subheaps, char subheapCount, char *
 			break;
 			
 	return index;
+}
+
+long initSubheaps(Subheap * subheaps, char subheapCount, char * variables, char * heap, int* variablesSize, int* variablesCount){
+	//Заполняем для каждой подкучи необходимые данные
+	char index = 0;
+	int variablesOffset = 0;
+	long heapOffset = 0;
+	for(; index < subheapCount; index++){
+		Subheap* currentSubheap = &subheaps[index];
+		//Смещение переменных
+		currentSubheap->variables = variables + variablesOffset;
+		//Количество переменных
+		currentSubheap->variablesCount = variablesCount[index];
+		//Размер переменных
+		currentSubheap->variablesSize = variablesSize[index];
+		//Смещение относительно начала кучи
+		currentSubheap->heap = heap + heapOffset;
+		
+		variablesOffset += currentSubheap->variablesCount;
+		heapOffset += currentSubheap->variablesCount * currentSubheap->variablesSize;
+	}
+	
+	return heapOffset;
 }

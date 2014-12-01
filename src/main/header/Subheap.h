@@ -1,11 +1,11 @@
 #ifndef SUBHEAP_H
 #define SUBHEAP_H
 
-struct Subheap { 
+typedef struct Subheap { 
     char * variables;
     int variablesCount;
     int variablesSize;
     char * heap;
-};
+} Subheap;
 
 #endif /*SUBHEAP_H*/

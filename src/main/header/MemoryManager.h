@@ -1,3 +1,3 @@
 char* allocate(int size);
 
-int removeVar(void* var);
+int removeVar(char* variable);

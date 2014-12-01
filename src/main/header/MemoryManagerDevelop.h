@@ -5,4 +5,10 @@ int init(int* variablesSize, int* variablesCount, int subheapCount);
 
 char* getHeap();
 
-struct Subheap * getSubheaps();
+Subheap * getSubheaps();
+
+char getSubheapCount();
+
+char* getLastByte();
+
+char* getVariables();
