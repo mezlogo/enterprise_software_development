@@ -1,0 +1,52 @@
+@startuml
+
+package "Headers" {
+    interface ErrorCode
+    interface ErrorCode << (H, #FFFFFF) >>
+}
+
+package "Analyzer" {
+     interface AnalyzerMain
+     interface AnalyzerMain << (C, #FFFFFF) >>
+}
+
+package "Network gateway" {
+     interface NetworkGatewayMain
+     interface NetworkGatewayMain << (C, #FFFFFF) >>
+}
+
+package "Memory manager" {
+     interface MemoryManager
+     interface MemoryManager << (C, #FFFFFF) >>
+}
+
+title Package diagram of enterprise software development
+
+"Memory manager" <-- "Network gateway"
+"Memory manager" <-- "Analyzer"
+
+hide empty attributes
+hide empty methods
+
+skinparam class {
+    BackgroundColor White
+    ArrowColor Black
+    BorderColor Black
+}
+
+skinparam note {
+    BackgroundColor White
+    ArrowColor Black
+    BorderColor Black
+}
+
+skinparam legend {
+    BackgroundColor White
+    BorderColor Black
+}
+
+legend
+Every class inside these packages include ErrorCode.h
+endlegend
+
+@enduml

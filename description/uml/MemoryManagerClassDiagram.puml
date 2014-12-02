@@ -1,0 +1,67 @@
+@startuml
+
+package Headers {
+    interface MemoryManager {
+        char* allocate(int size)
+        int remove(char* target)
+    }
+    note top: Main API
+
+    interface MemoryManagerSubheap {
+        int init()
+    }
+}
+
+package Implementation {
+    class Subheap{
+        int variablesSize
+        int variablesCount
+        char * variables
+        char * heap
+    }
+
+    class SubheapHandler
+
+    class ArrayHandler
+
+    class MemoryManagerSubheapImpl {
+        char[] heap
+        char[] variables
+        Subheap[] subheaps
+    }
+    note right: API Implementation
+}
+
+interface MemoryManager << (H, #FFFFFF) >>
+interface MemoryManagerSubheap << (H, #FFFFFF) >>
+
+class Subheap << (C, #FFFFFF) >>
+class MemoryManagerSubheapImpl << (C, #FFFFFF) >>
+class ArrayHandler << (C, #FFFFFF) >>
+class SubheapHandler << (C, #FFFFFF) >>
+
+skinparam class {
+    BackgroundColor White
+    ArrowColor Black
+    BorderColor Black
+}
+
+skinparam note {
+    BackgroundColor White
+    ArrowColor Black
+    BorderColor Black
+}
+
+title Memory manager class diagram
+
+MemoryManager <|-- MemoryManagerSubheap
+MemoryManagerSubheap <|-- MemoryManagerSubheapImpl
+SubheapHandler <-- MemoryManagerSubheapImpl
+Subheap <-- MemoryManagerSubheapImpl
+ArrayHandler <-- MemoryManagerSubheapImpl
+Subheap <-- SubheapHandler
+
+hide empty attributes
+hide empty methods
+
+@enduml

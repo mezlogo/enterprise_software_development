@@ -1,0 +1,42 @@
+@startuml
+title Allocate algorithm
+
+start
+
+:input size;
+
+partition Validation {
+    if (size <= 0 || maxVariablesSize < size) then (invalid size)
+        :return NULL;
+        stop
+    else (size is valid)
+    endif
+}
+
+:var subheapIndex = findHeapIndexBySize(size)
+var allocateVariableIndex = -1
+var currentSubheap]
+
+repeat
+:currentSubheap = subheaps.get(subheapIndex)
+allocateVariableIndex = findFirstZero(currentSubheap.variables)]
+
+if (0 <= allocateVariableIndex) then (free variable was found)
+    partition Success {
+        :currentSubheap.variables[allocateVariableIndex] = 1;
+        :return currentSubheap.heap + currentSubheap->variablesSize * allocateVariableIndex;
+    	stop
+	}
+else (current subheap has no free variables)
+endif
+
+:subheapIndex++;
+repeat while (subheapIndex <= subheapsCount)
+
+:return NULL;
+
+stop
+
+skinparam monochrome true
+
+@enduml

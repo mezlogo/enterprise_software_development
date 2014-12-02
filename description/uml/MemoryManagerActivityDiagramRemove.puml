@@ -1,0 +1,28 @@
+@startuml
+title Remove algorithm
+
+start
+
+:input variable's pointer;
+
+partition Validation {
+    if (variable < heap || lastByte < variable) then (invalid variable)
+        :return VARIABLE_REMOVE_FAIL;
+        stop
+    else (variable is valid)
+    endif
+}
+
+:var subheapIndex = findHeapIndexByPointer(variable)
+var targetSubheap = subheaps.get(subheapIndex)]
+
+:var removeIndex = (variable - targetSubheap.heap) / targetSubheap.variablesSize
+targetSubheap.variables.set(removeIndex, 0);
+
+:return VARIABLE_REMOVE_SUCCESS;
+
+stop
+
+skinparam monochrome true
+
+@enduml
