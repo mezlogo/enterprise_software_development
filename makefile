@@ -42,7 +42,7 @@ compile_and_test_subheap_handler: make_build_dir
 
 compile_and_test_memory_manager: compile_and_test_array_handler compile_and_test_subheap_handler
 	${START_MSG} memory_manager
-	${COMPILE} -c ${MEMORY_MANAGER_IMPLEMENT_DIR}/MemoryManager.c -o ${MEMORY_MANAGER_OBJECT} -I${HEADERS_DIR}	
+	${COMPILE} -c ${MEMORY_MANAGER_IMPLEMENT_DIR}/MemoryManagerSubheapImpl.c -o ${MEMORY_MANAGER_OBJECT} -I${HEADERS_DIR}	
 	${ARCHIVE} ${BUILD_DIR}/libMemoryManager.a ${MEMORY_MANAGER_OBJECT} ${SUBHEAP_HANDLER_OBJECT} ${ARRAY_HANDLER_OBJECT}
 	${COMPILE} -DEBUG -g ${TEST_DIR}/MemoryManagerTest.c -o ${BUILD_DIR}/MemoryManagerTest -I${TEST_FRMAWORK_DIR} -L${BUILD_DIR} -lMemoryManager -I${HEADERS_DIR}	
 	./${BUILD_DIR}/MemoryManagerTest
