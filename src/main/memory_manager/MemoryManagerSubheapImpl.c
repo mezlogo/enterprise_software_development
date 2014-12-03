@@ -4,16 +4,20 @@
 #include "Subheap.h"
 #include "SubheapHandler.h"
 
-#define MAX_HEAP_SIZE 10000
-#define MAX_HEAPS_COUNT 10
-#define MAX_VARIABLES_COUNT 1000
+#define MAX_HEAP_SIZE 10485760
+#define MAX_HEAPS_COUNT 15
+#define MAX_VARIABLES_COUNT 10000
 
+//Состояние управляющего памяти
 char heap[MAX_HEAP_SIZE];
 char variables[MAX_VARIABLES_COUNT];
-char currentSubheapCount;
 Subheap subheaps[MAX_HEAPS_COUNT];
 
-int maxVariablesSize = 10;
+//Динамическая инициализация
+char currentSubheapCount;
+
+//Кэшируем данные
+int maxVariablesSize = 0;
 char * lastByte;
 
 /*Выделение памяти

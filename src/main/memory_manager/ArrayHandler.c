@@ -39,7 +39,7 @@ int sumOfArray(int * array, int length){
 	return result;
 }
 
-char isAscending(int * array, int length){
+int isAscending(int * array, int length){
 	if (length != 1) {
 		int index = 1;
 		for(; index < length; index++)
@@ -50,7 +50,7 @@ char isAscending(int * array, int length){
 	return ONLY_ACSENDING;
 }
 
-char isOnlyPositive(int * array, int length){
+int isOnlyPositive(int * array, int length){
 	int index = 0;
 	for(; index < length; index++)
 		if(array[index] <= 0)

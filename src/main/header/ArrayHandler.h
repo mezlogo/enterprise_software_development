@@ -6,6 +6,6 @@ long sumOfMulOfTwoArray(int * first, int * second, int length);
 
 int sumOfArray(int * array, int length);
 
-char isAscending(int * array, int length);
+int isAscending(int * array, int length);
 
-char isOnlyPositive(int * array, int length);
+int isOnlyPositive(int * array, int length);
