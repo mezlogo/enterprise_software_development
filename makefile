@@ -23,7 +23,7 @@ TIMER_OBJECT = ${BUILD_DIR}/Timer.o
 START_MSG = @echo "<--------Start compile and testing"
 END_MSG = @echo "<--------End compile and testing"
 
-all: compile_and_test_timer
+all: compile_and_test_multi_thread_handler
 
 make_build_dir: clean
 	${CREATE_DIRS} ${BUILD_DIR}
