@@ -4,11 +4,12 @@
 #define BIT_IN_BYTE 8
 char int_sz = sizeof(int);
 
-unsigned char generateChar(){
+unsigned char generateChar() {
 	return (unsigned char) nanotime_utc_now().ns;
 }
 
-unsigned int generateInt(){
+unsigned int generateInt() {
+	
 	unsigned int result = 0;
 
 	char index = int_sz;
@@ -20,11 +21,11 @@ unsigned int generateInt(){
 	return 	result;
 }
 
-unsigned int generateIntByWidth(unsigned int width){
+unsigned int generateIntByWidth(unsigned int width) {
 	return width == 0 ? 0 : generateInt() % width;
 }
 
-unsigned int generateIntByRange(unsigned int start, unsigned int end){
+unsigned int generateIntByRange(unsigned int start, unsigned int end) {
 	
 	if (end < start) {
 		unsigned int swap = start;
@@ -34,4 +35,3 @@ unsigned int generateIntByRange(unsigned int start, unsigned int end){
 	
 	return generateIntByWidth(end - start) + start;
 }
-

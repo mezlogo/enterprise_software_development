@@ -1,23 +1,25 @@
-#include <unistd.h>
-#include <sys/types.h>
-#include <errno.h>
-#include <stdio.h>
-#include <sys/wait.h>
-#include <stdlib.h>
+#include <time.h>
 
-long multiThreadStart(long (*parent)(), void (*child)()){
-	pid_t pid = fork();
+struct timespec currentTime;	
 	
-	switch(pid) {
-		case -1: //Error create child
-			printf("%s", "Error exit, child can't create!\n");
-			exit(1);         
-			break;
-		case 0: //Child
-			child();
-			exit(0);
-			break;
-		default: //Parent
-			return parent();
-	}
+unsigned long getULongNano() {
+	clock_gettime(TIMER_ABSTIME, &currentTime);
+
+	return (unsigned long) currentTime.tv_nsec;
+}
+
+unsigned int getUIntNano() {
+	return (unsigned int) getULongNano();
+}
+
+unsigned char getUCharNano() {
+	return (unsigned char) getULongNano();
+}
+
+unsigned long calcOffsetULong(unsigned long start){
+	return getULongNano() - start;
+}
+
+unsigned int calcOffsetUInt(unsigned int start){
+	return getUIntNano() - start;
 }

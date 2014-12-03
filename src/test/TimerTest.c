@@ -1,18 +1,26 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <Random.h>
+
+#include "SimpleCUnit.h"
+#include "Timer.h"
+
+
+void test_getTime(){
+	
+	unsigned int start = getUIntNano();
+		
+	long res = 5 + (long) 5*60*100*8468*520*10;
+		
+	assertTrue("Calculation must take some time", 0 < calcOffsetUInt(start));
+}
+
+
 
 int main(int argc, char **argv) {
-	int i = 100;
-	
-	char cnt = 0;
-	
-	while(i--)
-		if (generateInt() % 2)
-			cnt++;
-	
-	printf("%d\n", cnt);
-	
-	//testSuit("Multi thread handler suit", 1, initTestCase("Multi thread starting", &test_multiThreadStart));
+
+	testSuit("Timer test suit", 1, 
+		initTestCase("Just nano time to uint", &test_getTime)
+		);
+
     return 0;
 }

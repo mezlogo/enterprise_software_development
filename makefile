@@ -18,6 +18,7 @@ SUBHEAP_HANDLER_OBJECT = ${BUILD_DIR}/SubheapHandler.o
 MEMORY_MANAGER_OBJECT = ${BUILD_DIR}/MemoryManager.o
 MULTI_THREAD_HANDLER_OBJECT = ${BUILD_DIR}/MultiThreadHandler.o
 RANDOM_OBJECT = ${BUILD_DIR}/Random.o
+TIMER_OBJECT = ${BUILD_DIR}/Timer.o
 
 START_MSG = @echo "<--------Start compile and testing"
 END_MSG = @echo "<--------End compile and testing"
@@ -60,12 +61,20 @@ compile_and_test_multi_thread_handler: make_build_dir
 	./${BUILD_DIR}/MultiThreadHandlerTest
 	${END_MSG} multi_thread_handler
 
-compile_and_test_timer: make_build_dir
-	${START_MSG} timer
+compile_and_test_random: make_build_dir
+	${START_MSG} random
 	${COMPILE} -c ${ANALYZER_IMPLEMENT_DIR}/Random.c -o ${RANDOM_OBJECT} -I${HEADERS_DIR}	
 	${ARCHIVE} ${BUILD_DIR}/libRandom.a ${RANDOM_OBJECT}
 	${COMPILE} -DEBUG -g ${TEST_DIR}/RandomTest.c -o ${BUILD_DIR}/RandomTest -I${TEST_FRMAWORK_DIR} -L${BUILD_DIR} -lRandom -I${HEADERS_DIR}	
 	./${BUILD_DIR}/RandomTest
+	${END_MSG} random
+
+compile_and_test_timer: make_build_dir
+	${START_MSG} timer
+	${COMPILE} -c ${ANALYZER_IMPLEMENT_DIR}/Timer.c -o ${TIMER_OBJECT} -I${HEADERS_DIR}	
+	${ARCHIVE} ${BUILD_DIR}/libTimer.a ${TIMER_OBJECT}
+	${COMPILE} -DEBUG -g ${TEST_DIR}/TimerTest.c -o ${BUILD_DIR}/TimerTest -I${TEST_FRMAWORK_DIR} -L${BUILD_DIR} -lTimer -I${HEADERS_DIR}	
+	./${BUILD_DIR}/TimerTest
 	${END_MSG} timer
 
 clean:
