@@ -17,12 +17,12 @@ ARRAY_HANDLER_OBJECT = ${BUILD_DIR}/ArrayHandler.o
 SUBHEAP_HANDLER_OBJECT = ${BUILD_DIR}/SubheapHandler.o
 MEMORY_MANAGER_OBJECT = ${BUILD_DIR}/MemoryManager.o
 MULTI_THREAD_HANDLER_OBJECT = ${BUILD_DIR}/MultiThreadHandler.o
-
+RANDOM_OBJECT = ${BUILD_DIR}/Random.o
 
 START_MSG = @echo "<--------Start compile and testing"
 END_MSG = @echo "<--------End compile and testing"
 
-all: compile_and_test_memory_manager
+all: compile_and_test_timer
 
 make_build_dir: clean
 	${CREATE_DIRS} ${BUILD_DIR}
@@ -59,6 +59,14 @@ compile_and_test_multi_thread_handler: make_build_dir
 	${COMPILE} -DEBUG -g ${TEST_DIR}/MultiThreadHandlerTest.c -o ${BUILD_DIR}/MultiThreadHandlerTest -I${TEST_FRMAWORK_DIR} -L${BUILD_DIR} -lMultiThreadHandler -I${HEADERS_DIR}	
 	./${BUILD_DIR}/MultiThreadHandlerTest
 	${END_MSG} multi_thread_handler
+
+compile_and_test_timer: make_build_dir
+	${START_MSG} timer
+	${COMPILE} -c ${ANALYZER_IMPLEMENT_DIR}/Random.c -o ${RANDOM_OBJECT} -I${HEADERS_DIR}	
+	${ARCHIVE} ${BUILD_DIR}/libRandom.a ${RANDOM_OBJECT}
+	${COMPILE} -DEBUG -g ${TEST_DIR}/RandomTest.c -o ${BUILD_DIR}/RandomTest -I${TEST_FRMAWORK_DIR} -L${BUILD_DIR} -lRandom -I${HEADERS_DIR}	
+	./${BUILD_DIR}/RandomTest
+	${END_MSG} timer
 
 clean:
 	${RECURSIVE_REMOVE} ${BUILD_DIR}
