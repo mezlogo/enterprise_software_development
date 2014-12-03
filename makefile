@@ -19,11 +19,12 @@ MEMORY_MANAGER_OBJECT = ${BUILD_DIR}/MemoryManager.o
 MULTI_THREAD_HANDLER_OBJECT = ${BUILD_DIR}/MultiThreadHandler.o
 RANDOM_OBJECT = ${BUILD_DIR}/Random.o
 TIMER_OBJECT = ${BUILD_DIR}/Timer.o
+SIZE_GENERATOR = ${BUILD_DIR}/SizeGenerator.o
 
 START_MSG = @echo "<--------Start compile and testing"
 END_MSG = @echo "<--------End compile and testing"
 
-all: compile_and_test_multi_thread_handler
+all: compile_and_test_size_generator
 
 make_build_dir: clean
 	${CREATE_DIRS} ${BUILD_DIR}
@@ -60,15 +61,7 @@ compile_and_test_multi_thread_handler: make_build_dir
 	${COMPILE} -DEBUG -g ${TEST_DIR}/MultiThreadHandlerTest.c -o ${BUILD_DIR}/MultiThreadHandlerTest -I${TEST_FRMAWORK_DIR} -L${BUILD_DIR} -lMultiThreadHandler -I${HEADERS_DIR}	
 	./${BUILD_DIR}/MultiThreadHandlerTest
 	${END_MSG} multi_thread_handler
-
-compile_and_test_random: make_build_dir
-	${START_MSG} random
-	${COMPILE} -c ${ANALYZER_IMPLEMENT_DIR}/Random.c -o ${RANDOM_OBJECT} -I${HEADERS_DIR}	
-	${ARCHIVE} ${BUILD_DIR}/libRandom.a ${RANDOM_OBJECT}
-	${COMPILE} -DEBUG -g ${TEST_DIR}/RandomTest.c -o ${BUILD_DIR}/RandomTest -I${TEST_FRMAWORK_DIR} -L${BUILD_DIR} -lRandom -I${HEADERS_DIR}	
-	./${BUILD_DIR}/RandomTest
-	${END_MSG} random
-
+	
 compile_and_test_timer: make_build_dir
 	${START_MSG} timer
 	${COMPILE} -c ${ANALYZER_IMPLEMENT_DIR}/Timer.c -o ${TIMER_OBJECT} -I${HEADERS_DIR}	
@@ -76,6 +69,22 @@ compile_and_test_timer: make_build_dir
 	${COMPILE} -DEBUG -g ${TEST_DIR}/TimerTest.c -o ${BUILD_DIR}/TimerTest -I${TEST_FRMAWORK_DIR} -L${BUILD_DIR} -lTimer -I${HEADERS_DIR}	
 	./${BUILD_DIR}/TimerTest
 	${END_MSG} timer
+	
+compile_and_test_random: compile_and_test_timer
+	${START_MSG} random
+	${COMPILE} -c ${ANALYZER_IMPLEMENT_DIR}/Random.c -o ${RANDOM_OBJECT} -I${HEADERS_DIR}	
+	${ARCHIVE} ${BUILD_DIR}/libRandom.a ${RANDOM_OBJECT} ${TIMER_OBJECT}
+	${COMPILE} -DEBUG -g ${TEST_DIR}/RandomTest.c -o ${BUILD_DIR}/RandomTest -I${TEST_FRMAWORK_DIR} -L${BUILD_DIR} -lRandom -I${HEADERS_DIR}	
+	./${BUILD_DIR}/RandomTest
+	${END_MSG} random
+
+compile_and_test_size_generator: compile_and_test_random
+	${START_MSG} size_generator
+	${COMPILE} -c ${ANALYZER_IMPLEMENT_DIR}/SizeGenerator.c -o ${SIZE_GENERATOR} -I${HEADERS_DIR}	
+	${ARCHIVE} ${BUILD_DIR}/libSizeGenerator.a ${RANDOM_OBJECT} ${TIMER_OBJECT} ${SIZE_GENERATOR}
+	${COMPILE} -DEBUG -g ${TEST_DIR}/SizeGeneratorTest.c -o ${BUILD_DIR}/SizeGeneratorTest -I${TEST_FRMAWORK_DIR} -L${BUILD_DIR} -lSizeGenerator -I${HEADERS_DIR}	
+	./${BUILD_DIR}/SizeGeneratorTest
+	${END_MSG} size_generator
 
 clean:
 	${RECURSIVE_REMOVE} ${BUILD_DIR}

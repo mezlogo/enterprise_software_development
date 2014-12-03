@@ -1,0 +1,3 @@
+int getRange();
+
+int getFix();
