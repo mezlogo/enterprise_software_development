@@ -24,7 +24,9 @@ SIZE_GENERATOR = ${BUILD_DIR}/SizeGenerator.o
 START_MSG = @echo "<--------Start compile and testing"
 END_MSG = @echo "<--------End compile and testing"
 
-all: compile_and_test_size_generator
+all: integrate
+
+integrate: compile_and_test_memory_manager compile_and_test_size_generator
 
 make_build_dir: clean
 	${CREATE_DIRS} ${BUILD_DIR}
