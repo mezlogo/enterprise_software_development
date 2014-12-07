@@ -1,58 +1,78 @@
-#include <stdio.h>
-#include <stdlib.h>
-
-#include <pthread.h>
-
 #include "ErrorCode.h"
-#include "MultiThreadHandler.h"
+#include "TaskRunner.h"
 #include "SimpleCUnit.h"
 
-pthread_mutex_t locka;
-pthread_mutex_t lockb;
+typedef pthread_mutex_t Mutex;
 
-void child(){
-	printf("child locka = %x\n", &locka);
-	printf("child before mutex A locking\n");
-	int a = pthread_mutex_lock(&locka);
-	printf("mutex A locked by child\n");
-	int b =-1;// = pthread_mutex_unlock(&lockb);
-	
-	printf("%s%d%s%d\n", "Child lock a: ", a, " unlock b: ", b);
-	
-	a = pthread_mutex_lock(&locka);
-	b = pthread_mutex_unlock(&lockb);
-	
-	printf("%s%d%s%d\n", "Child lock a: ", a, " unlock b: ", b);
-	
+Mutex locka;
+Mutex lockb;
+
+void initMutex(Mutex * mutex) {
+	int result = pthread_mutex_init(mutex, NULL);
+	if (0 != result) printf("%s%d\n", "Mutex init error: ", result);
 }
 
-long parent(){
-	printf("parent locka = %x\n", &locka);
-	int b = pthread_mutex_lock(&lockb);
-	printf("parent before lock mutex A\n");
-	int a = pthread_mutex_lock(&locka);
-	printf("parent locked mutex A\n");
-	pause();
-	printf("%s%d%s%d\n", "Parent lock b: ", b, " unlock a: ", b);
+void unlockMutex(Mutex * mutex) {
+	int result = pthread_mutex_unlock(mutex);
+	if (0 != result) printf("%s%d\n", "Mutex unlock error: ", result);
+}
+
+void lockMutex(Mutex * mutex) {
+	int result = pthread_mutex_lock(mutex);
+	if (0 != result) printf("%s%d\n", "Mutex lock error: ", result);
+}
+
+void child(){
+	sleep(1);
+	printf("Child init\n");
 	
-	b = pthread_mutex_lock(&lockb);
-	a = pthread_mutex_unlock(&locka);
+	unlockMutex(&locka);
+	lockMutex(&lockb);
 	
-	printf("%s%d%s%d\n", "Parent lock b: ", b, " unlock a: ", b);
+	printf("Child 1\n");
 	
-	return 1;
+	unlockMutex(&lockb);
+	lockMutex(&locka);
+	
+	unlockMutex(&locka);
+	lockMutex(&lockb);
+	
+	printf("Child 2\n");
+	
+	unlockMutex(&lockb);
+	lockMutex(&locka);
+}
+
+void parent(){	
+	printf("Parent init\n");
+
+	unlockMutex(&lockb);
+/*	lockMutex(&locka);
+	
+	printf("Parent 1\n");
+	
+	unlockMutex(&locka);
+	lockMutex(&lockb);
+	
+	unlockMutex(&lockb);
+	lockMutex(&locka);
+	
+	printf("Parent 2\n");
+	
+	unlockMutex(&locka);
+	lockMutex(&lockb);*/
 }
 
 void test_multiThreadStart() {
-	assertTrue("Should return 1", 1 == multiThreadStart(&parent, &child));
+	multiThreadStart(&parent, &child);
 }
 
-
 int main(int argc, char **argv) {
-	int a = pthread_mutex_init(&locka, NULL);
-	int b = pthread_mutex_init(&lockb, NULL);
-	
-	printf("%s%d%s%d\n", "!!!!!!!!!!!!!------------------->>>>Init mut a: ", a, " init b: ", b);
+	initMutex(&locka);
+	initMutex(&lockb);
+
+	lockMutex(&locka);
+	lockMutex(&lockb);
 	
 	testSuit("Multi thread handler suit", 1, 
 		initTestCase("Should sync", &test_multiThreadStart)		

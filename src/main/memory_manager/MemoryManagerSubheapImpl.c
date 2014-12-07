@@ -36,7 +36,7 @@ char* allocate(int size){
 		return NULL;
 	}
 	
-	char subheapIndex = findHeapIndexBySize(subheaps, currentSubheapCount, size);
+	int subheapIndex = findHeapIndexBySize(subheaps, currentSubheapCount, size);
 	int allocateVariableIndex = -1;
 	Subheap* currentSubheap;
 	
@@ -69,7 +69,7 @@ char* allocate(int size){
 int removeVar(char* variable){
 	if (variable < heap || lastByte < variable) return VARIABLE_REMOVE_FAIL;
 		
-	char subheapIndex = findHeapIndexByPointer(subheaps, currentSubheapCount, variable);
+	int subheapIndex = findHeapIndexByPointer(subheaps, currentSubheapCount, variable);
 	
 	Subheap * targetSubheap = &subheaps[subheapIndex];
 	

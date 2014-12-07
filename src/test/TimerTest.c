@@ -4,14 +4,16 @@
 #include "SimpleCUnit.h"
 #include "Timer.h"
 
+long res;
 
 void test_getTime(){
 	
 	unsigned long start = getULongNano();
 		
-	long res = 5 + (long) 5*60*100*8468*520*10;
+	res = 5 + (long) 5*60*100*8468*520*10;
 		
 	assertTrue("Calculation must take some time", 0 < calcOffsetULong(start));
+	
 }
 
 void show(){
@@ -20,7 +22,7 @@ void show(){
 	while (counter--) {
 		unsigned long start = getULongNano();
 			
-		long res = (long) 5 * 60 * 100 * 8468 * 520 * 10;
+		res = (long) 5 * 60 * 100 * 8468 * 520 * 10;
 			
 		printf("%s%lu\n", "Time: ", calcOffsetULong(start));		
 	}
