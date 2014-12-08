@@ -57,8 +57,8 @@ void postIteration() {
 void startAnalyze(int (*generateMethod)(), char * msg) {
 	printf("%s", msg);
 	
-	int variablesSize[] = ANALYZE_VARIABLES_SIZE
-	int variablesCount[] = ANALYZE_VARIABLES_COUNT
+	int variablesSize[] = ANALYZE_VARIABLES_SIZE;
+	int variablesCount[] = ANALYZE_VARIABLES_COUNT;
 	char subheapCount = ANALYZE_SUBHEAPS_COUNT;
 	
 	int memoryManagerInitResult = init(variablesSize, variablesCount, subheapCount);
