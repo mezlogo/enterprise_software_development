@@ -1,4 +1,4 @@
-#include "ErrorCode.h"
+#include "Configuration.h"
 #include "Logger.h"
 #include "SimpleCUnit.h"
 

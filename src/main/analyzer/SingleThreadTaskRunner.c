@@ -1,15 +1,17 @@
+#include "Configuration.h"
+
 void tasksRun(int (*parent)(), void (*child)(), void (*preIteration)(), void (*postIteration)(), long seesionCount, long iterationCount) {
 	
-	//crash == 0
-	char isCrash = 1;
+	//if isCrash == CRASH, that mean = crash
+	char isCrash = NO_CRASH;
 	
-	while (isCrash && seesionCount--) {
+	while (CRASH != isCrash && seesionCount--) {
 		
 		preIteration();
 		
 		long index = iterationCount;
 		
-		while (isCrash && index--) {
+		while (CRASH != isCrash && index--) {
 			isCrash = parent();
 			child();
 		}

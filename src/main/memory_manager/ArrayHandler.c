@@ -1,4 +1,4 @@
-#include "ErrorCode.h"
+#include "Configuration.h"
 
 int findFirstZero(char * array, int length){
 	int index = 0;

@@ -1,12 +1,11 @@
 #include <stdio.h>
-
-#define SIZE 100000
+#include "Configuration.h"
 
 unsigned long allocateIndex;
 unsigned long removeIndex;
 
-unsigned long allocateMeasuring[SIZE];
-unsigned long removeMeasuring[SIZE];
+unsigned long allocateMeasuring[ITERATION_COUNT];
+unsigned long removeMeasuring[ITERATION_COUNT];
 
 void reset() {
 	allocateIndex = 0;

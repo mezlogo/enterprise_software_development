@@ -1,4 +1,4 @@
-#include "ErrorCode.h"
+#include "Configuration.h"
 #include "CyclicList.h"
 #include "SimpleCUnit.h"
 

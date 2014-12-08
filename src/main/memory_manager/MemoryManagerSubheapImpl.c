@@ -1,12 +1,8 @@
 #include <stdio.h>
 #include "ArrayHandler.h"
-#include "ErrorCode.h"
+#include "Configuration.h"
 #include "Subheap.h"
 #include "SubheapHandler.h"
-
-#define MAX_HEAP_SIZE 10485760
-#define MAX_HEAPS_COUNT 15
-#define MAX_VARIABLES_COUNT 10000
 
 //Состояние управляющего памяти
 char heap[MAX_HEAP_SIZE];
@@ -124,7 +120,7 @@ int init(int* variablesSize, int* variablesCount, char subheapCount){
 	maxVariablesSize = subheaps[currentSubheapCount - 1].variablesSize;
 	lastByte = heap + heapOffset - 1;
 
-	return 0;
+	return INITIAL_SUCCESS;
 }
 
 Subheap * getSubheaps(){

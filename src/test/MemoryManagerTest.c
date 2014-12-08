@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "ErrorCode.h"
+#include "Configuration.h"
 #include "SimpleCUnit.h"
 #include "Subheap.h"
 #include "MemoryManagerSubheap.h"

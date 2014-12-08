@@ -23,19 +23,21 @@ MULTI_THREAD_HANDLER_OBJECT = ${BUILD_DIR}/MultiThreadHandler.o
 ARRAY_HANDLER_OBJECT = ${BUILD_DIR}/ArrayHandler.o
 SUBHEAP_HANDLER_OBJECT = ${BUILD_DIR}/SubheapHandler.o
 MEMORY_MANAGER_OBJECT = ${BUILD_DIR}/MemoryManager.o
+
 RANDOM_OBJECT = ${BUILD_DIR}/Random.o
 TIMER_OBJECT = ${BUILD_DIR}/Timer.o
 SIZE_GENERATOR = ${BUILD_DIR}/SizeGenerator.o
 SINGLE_THREAD_TASK_RUNNER = ${BUILD_DIR}/SingleThreadTaskRunner.o
 CYCLIC_LIST_OBJECT = ${BUILD_DIR}/CyclicList.o
 LOGGER_OBJECT = ${BUILD_DIR}/Logger.o
+ANALYZER_API_OBJECT = ${BUILD_DIR}/AnalyzerAPI.o
 
 START_MSG = @echo "<--------Start compile and testing"
 END_MSG = @echo "<--------End compile and testing"
 
-all: integrate
+all: compile_and_test_analyzer
 
-integrate: compile_and_test_memory_manager compile_and_test_size_generator compile_and_test_cyclic_list compile_and_test_single_thread_task_runner compile_and_test_logger
+integrate: compile_and_test_memory_manager compile_and_test_size_generator compile_and_test_cyclic_list compile_and_test_single_thread_task_runner compile_and_test_logger compile_and_test_analyzer
 
 make_build_dir: clean
 	${CREATE_DIRS} ${BUILD_DIR}
@@ -120,6 +122,15 @@ compile_and_test_logger: make_build_dir
 	${COMPILE_DEBUG} ${TEST_DIR}/LoggerTest.c -o ${BUILD_DIR}/LoggerTest -I${TEST_FRMAWORK_DIR} -L${BUILD_DIR} -lLogger -I${HEADERS_DIR}	
 	./${BUILD_DIR}/LoggerTest
 	${END_MSG} logger
+
+compile_and_test_analyzer: compile_and_test_size_generator compile_and_test_cyclic_list compile_and_test_single_thread_task_runner compile_and_test_logger compile_and_test_memory_manager
+	${START_MSG} analyzer
+	${COMPILE_SOURCE} ${ANALYZER_IMPLEMENT_DIR}/AnalyzerAPI.c -o ${ANALYZER_API_OBJECT} -I${HEADERS_DIR}	
+	${ARCHIVE} ${BUILD_DIR}/libAnalyzerAPI.a ${ANALYZER_API_OBJECT} ${MEMORY_MANAGER_OBJECT} ${RANDOM_OBJECT} ${TIMER_OBJECT} ${SIZE_GENERATOR} ${SINGLE_THREAD_TASK_RUNNER} ${CYCLIC_LIST_OBJECT} ${LOGGER_OBJECT} ${ARRAY_HANDLER_OBJECT} ${SUBHEAP_HANDLER_OBJECT}
+	${COMPILE_DEBUG} ${TEST_DIR}/AnalyzerAPITest.c -o ${BUILD_DIR}/AnalyzerAPITest -I${TEST_FRMAWORK_DIR} -L${BUILD_DIR} -lAnalyzerAPI -I${HEADERS_DIR}	
+	./${BUILD_DIR}/AnalyzerAPITest
+	${END_MSG} analyzer
+
 
 
 clean:

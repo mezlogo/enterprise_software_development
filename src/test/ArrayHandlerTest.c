@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "ErrorCode.h"
+#include "Configuration.h"
 #include "SimpleCUnit.h"
 #include "ArrayHandler.h"
 
