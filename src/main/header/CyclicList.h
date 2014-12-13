@@ -1,3 +1,3 @@
-void put(char * variable);
+void put(char* variable);
 
-char * next();
+char* next();

@@ -13,14 +13,13 @@ CFLAGS = -g -Wall
 COMPILE_SOURCE = ${COMPILE} ${CFLAGS} -c
 COMPILE_TEST = ${COMPILE} ${CFLAGS} -DEBUG
 COMPILE_DEBUG = ${COMPILE} ${CFLAGS} -DEBUG -v -da -Q
-
+MULTI_THREAD_COMPILE_FLAG = -lpthread
 
 ARCHIVE = ar -crsv
 RECURSIVE_REMOVE = rm -rf
 CREATE_DIRS = mkdir
 
 
-MULTI_THREAD_HANDLER_OBJECT = ${BUILD_DIR}/MultiThreadHandler.o
 
 ARRAY_HANDLER_OBJECT = ${BUILD_DIR}/ArrayHandler.o
 SUBHEAP_HANDLER_OBJECT = ${BUILD_DIR}/SubheapHandler.o
@@ -33,11 +32,14 @@ SINGLE_THREAD_TASK_RUNNER = ${BUILD_DIR}/SingleThreadTaskRunner.o
 CYCLIC_LIST_OBJECT = ${BUILD_DIR}/CyclicList.o
 LOGGER_OBJECT = ${BUILD_DIR}/Logger.o
 ANALYZER_API_OBJECT = ${BUILD_DIR}/AnalyzerAPI.o
+MULTI_THREAD_TASK_RUNNER_OBJECT = ${BUILD_DIR}/MultiThreadTaskRunner.o
 
 START_MSG = @echo "<--------Start compile and testing"
 END_MSG = @echo "<--------End compile and testing"
 
-all: compile_and_test_analyzer
+all: run_memory_manager_analyzer
+
+run_memory_manager_analyzer: compile_and_test_analyzer
 
 without_time: compile_and_test_memory_manager compile_and_test_cyclic_list compile_and_test_single_thread_task_runner compile_and_test_logger
 
@@ -71,14 +73,15 @@ compile_and_test_memory_manager: compile_and_test_array_handler compile_and_test
 	./${BUILD_DIR}/MemoryManagerTest
 	${END_MSG} memory_manager
 
-compile_and_test_multi_thread_handler: make_build_dir
-	${START_MSG} multi_thread_handler
-	${COMPILE_SOURCE} ${ANALYZER_IMPLEMENT_DIR}/MultiThreadHandler.c -o ${MULTI_THREAD_HANDLER_OBJECT} -I${HEADERS_DIR}	
-	${ARCHIVE} ${BUILD_DIR}/libMultiThreadHandler.a ${MULTI_THREAD_HANDLER_OBJECT}
-	${COMPILE_TEST} ${TEST_DIR}/MultiThreadHandlerTest.c -o ${BUILD_DIR}/MultiThreadHandlerTest -I${TEST_FRMAWORK_DIR} -L${BUILD_DIR} -lMultiThreadHandler -I${HEADERS_DIR} -lpthread
-	./${BUILD_DIR}/MultiThreadHandlerTest
-	${END_MSG} multi_thread_handler
 	
+compile_and_test_multi_thread_task_runner: make_build_dir
+	${START_MSG} multi_thread_task_runner
+	${COMPILE_SOURCE} ${ANALYZER_IMPLEMENT_DIR}/MultiThreadTaskRunner.c -o ${MULTI_THREAD_TASK_RUNNER_OBJECT} -I${HEADERS_DIR}	
+	${ARCHIVE} ${BUILD_DIR}/libMultiThreadTaskRunner.a ${MULTI_THREAD_TASK_RUNNER_OBJECT}
+	${COMPILE_TEST} ${TEST_DIR}/MultiThreadTaskRunnerTest.c -o ${BUILD_DIR}/MultiThreadTaskRunnerTest -I${TEST_FRMAWORK_DIR} -L${BUILD_DIR} -lMultiThreadTaskRunner -I${HEADERS_DIR} ${MULTI_THREAD_COMPILE_FLAG}
+	./${BUILD_DIR}/MultiThreadTaskRunnerTest
+	${END_MSG} multi_thread_task_runner
+
 compile_and_test_single_thread_task_runner: make_build_dir
 	${START_MSG} single_thread_task_runner
 	${COMPILE_SOURCE} ${ANALYZER_IMPLEMENT_DIR}/SingleThreadTaskRunner.c -o ${SINGLE_THREAD_TASK_RUNNER} -I${HEADERS_DIR}	
@@ -127,21 +130,20 @@ compile_and_test_logger: make_build_dir
 	./${BUILD_DIR}/LoggerTest
 	${END_MSG} logger
 
-compile_and_test_analyzer: compile_and_test_size_generator compile_and_test_cyclic_list compile_and_test_single_thread_task_runner compile_and_test_logger compile_and_test_memory_manager
+compile_and_test_analyzer: compile_and_test_size_generator compile_and_test_cyclic_list compile_and_test_multi_thread_task_runner compile_and_test_logger compile_and_test_memory_manager
 	${START_MSG} analyzer
 	${COMPILE_SOURCE} ${ANALYZER_IMPLEMENT_DIR}/AnalyzerAPI.c -o ${ANALYZER_API_OBJECT} -I${HEADERS_DIR}	
-	${ARCHIVE} ${BUILD_DIR}/libAnalyzerAPI.a ${ANALYZER_API_OBJECT} ${MEMORY_MANAGER_OBJECT} ${RANDOM_OBJECT} ${TIMER_OBJECT} ${SIZE_GENERATOR} ${SINGLE_THREAD_TASK_RUNNER} ${CYCLIC_LIST_OBJECT} ${LOGGER_OBJECT} ${ARRAY_HANDLER_OBJECT} ${SUBHEAP_HANDLER_OBJECT}
-	${COMPILE_TEST} ${TEST_DIR}/AnalyzerAPITest.c -o ${BUILD_DIR}/AnalyzerAPITest -I${TEST_FRMAWORK_DIR} -L${BUILD_DIR} -lAnalyzerAPI -I${HEADERS_DIR}	
+	${ARCHIVE} ${BUILD_DIR}/libAnalyzerAPI.a ${ANALYZER_API_OBJECT} ${MEMORY_MANAGER_OBJECT} ${RANDOM_OBJECT} ${TIMER_OBJECT} ${SIZE_GENERATOR} ${MULTI_THREAD_TASK_RUNNER_OBJECT} ${CYCLIC_LIST_OBJECT} ${LOGGER_OBJECT} ${ARRAY_HANDLER_OBJECT} ${SUBHEAP_HANDLER_OBJECT}
+	${COMPILE_TEST} ${TEST_DIR}/AnalyzerAPITest.c -o ${BUILD_DIR}/AnalyzerAPITest -I${TEST_FRMAWORK_DIR} -L${BUILD_DIR} -lAnalyzerAPI -I${HEADERS_DIR} ${MULTI_THREAD_COMPILE_FLAG}	
 	./${BUILD_DIR}/AnalyzerAPITest
 	${END_MSG} analyzer
-
-
 
 clean:
 	${RECURSIVE_REMOVE} ${BUILD_DIR}
 	#rm *.c.*
 
-
-fork: make_build_dir
-	${COMPILE} ${TEST_DIR}/ForkExample.c -o ${BUILD_DIR}/fork
-	./${BUILD_DIR}/fork
+check: make_build_dir
+	./cppcheck -q --enable=style,performance,warning -I${HEADERS_DIR} --template='{severity}\t{id} {file}:{line} {message}' src/main 2> ${BUILD_DIR}/suppress-log.txt
+	
+form:
+	astyle -H -k1 -J -O -xL -W -p -m0 -M -xW -xT -xG -K -A2 -r -n src/*.c src/*.h

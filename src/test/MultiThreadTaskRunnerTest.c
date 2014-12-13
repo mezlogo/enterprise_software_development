@@ -44,7 +44,7 @@ void test_runner() {
 }
 
 int main(int argc, char** argv) {
-    testSuit("Single thread task tunner suit", 1,
+    testSuit("Multi thread task tunner suit", 1,
 	     initTestCase("Runner case", &test_runner)
 	    );
     return 0;

@@ -5,7 +5,7 @@ int init(int* variablesSize, int* variablesCount, int subheapCount);
 
 char* getHeap();
 
-Subheap * getSubheaps();
+Subheap* getSubheaps();
 
 char getSubheapCount();
 

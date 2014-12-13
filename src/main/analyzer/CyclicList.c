@@ -5,16 +5,16 @@
 long putIndex = 0;
 long getIndex = 0;
 
-char * list[MAX_VARIABLES_COUNT];
+char* list[MAX_VARIABLES_COUNT];
 
-void put(char * variable) {
-	validation(putIndex);
-		
-	list[putIndex] = variable;
+void put(char* variable) {
+    validation(putIndex);
+
+    list[putIndex] = variable;
 }
 
-char * next() {
-	validation(getIndex);
-	
-	return list[getIndex];
+char* next() {
+    validation(getIndex);
+
+    return list[getIndex];
 }
