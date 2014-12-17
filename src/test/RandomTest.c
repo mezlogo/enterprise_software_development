@@ -2,6 +2,11 @@
 #include "Random.h"
 #include "SimpleCUnit.h"
 
+void test_generateCharShort() {
+    assertTrue("Short shouldn't equalse", generateShort() != generateShort());
+    assertTrue("Char shouldn't equalse", generateChar() != generateChar());
+}
+
 void test_generateIntByWidth() {
     int count = 100000;
 
@@ -35,8 +40,9 @@ void test_generateIntByRange() {
 }
 
 int main(int argc, char** argv) {
-    testSuit("Random suit", 2,
+    testSuit("Random suit", 3,
 	     initTestCase("Generate by width", &test_generateIntByWidth),
+	     initTestCase("Generate primitives", &test_generateCharShort),
 	     initTestCase("Generate by range", &test_generateIntByRange));
     return 0;
 }

@@ -57,7 +57,7 @@ unsigned long max(unsigned long* array, long length) {
     return result;
 }
 
-void printMeasuring(unsigned long* array, long length, char* measuringName) {
+void printMeasuring(unsigned long* array, unsigned long length, char* measuringName) {
     printf("\n%s%s%lu\n", measuringName, "\nCount: ", length);
     printArray(array, length);
     printf("%s%lu%s%lu%s%lu\n", "\nMin: ", min(array, length), "\nMax: ", max(array, length), "\nAvg: ", sum(array, length) / length);
