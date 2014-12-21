@@ -15,15 +15,16 @@ void generateKey(Key* key) {
     key->port = generateShort();
 }
 
-Key staticKey;
-
 void generateUniqKey(Key* key, Key* keys, int length) {
-    do {
-	generateKey(&staticKey);
-    } while (1 == isUniq(&staticKey, keys, length));
 
-    key->port = staticKey.port;
-    key->ip = staticKey.ip;
+    Key bufferKey;
+
+    do {
+	generateKey(&bufferKey);
+    } while (1 == isUniq(&bufferKey, keys, length));
+
+    key->port = bufferKey.port;
+    key->ip = bufferKey.ip;
 }
 
 void generateUniqKeys(Key* keys, int length) {

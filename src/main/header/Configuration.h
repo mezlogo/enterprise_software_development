@@ -25,8 +25,6 @@
 #define INITIAL_ERROR_MANAGER_TOO_SMALL -2
 #define VARIABLE_REMOVE_FAIL -1
 
-
-
 ////////////
 //Analyzer//
 ////////////
@@ -51,6 +49,18 @@
 #define ANALYZE_VARIABLES_COUNT {480, 480, 480, 480, 480, 480}
 #define ANALYZE_SUBHEAPS_COUNT 6
 
+///////////////////
+//Network gateway//
+///////////////////
+
+//Configuration//
+#define TRANSMITTERS_COUNT 100
+#define MESSAGE_SIZE 17
+
+#define TRANSMITTER_ALTER_THRESHOLD_VALUE 50
+
+#define MESSAGE_TYPE_REGULAR 1
+#define MESSAGE_TYPE_ALTER 2
 
 
 #endif /*ERROR_CODE_H*/

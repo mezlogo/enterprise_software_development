@@ -39,11 +39,12 @@ MULTI_THREAD_TASK_RUNNER_OBJECT = ${BUILD_DIR}/MultiThreadTaskRunner.o
 LINKED_LIST_OBJECT = ${BUILD_DIR}/LinkedList.o
 KEY_HANDLER_OBJECT = ${BUILD_DIR}/KeyHandler.o
 KEY_GENERATOR_OBJECT = ${BUILD_DIR}/KeyGenerator.o
+FAKE_TRANSMITTERS_OBJECT = ${BUILD_DIR}/FakeTransmitters.o
 
 START_MSG = @echo "<--------Start compile and testing"
 END_MSG = @echo "<--------End compile and testing"
 
-all: compile_and_test_key_generator
+all: compile_and_test_fake_transmitters
 
 run_memory_manager_analyzer: compile_and_test_analyzer
 
@@ -56,7 +57,7 @@ clean:
 	#rm *.c.*
 
 check: make_build_dir
-	./cppcheck -q --enable=style,performance,warning -I${HEADERS_DIR} --template='{severity}\t{id} {file}:{line} {message}' src/main 2> ${BUILD_DIR}/suppress-log.txt
+	./cppcheck -q --enable=style,performance,warning -I${HEADERS_DIR} --template='{severity}\t{id} {file}:{line} {message}' ${MAIN_DIR} 2> ${BUILD_DIR}/suppress-log.txt
 	
 form:
 	astyle -H -k1 -J -O -xL -W -p -m0 -M -xW -xT -xG -K -A2 -r -n src/*.c src/*.h
@@ -180,3 +181,12 @@ compile_and_test_key_generator: compile_and_test_key_handler compile_and_test_ra
 	${COMPILE_TEST} ${TEST_DIR}/KeyGeneratorTest.c -o ${BUILD_DIR}/KeyGeneratorTest -I${TEST_FRMAWORK_DIR} -I${HEADERS_DIR}	 -L${BUILD_DIR} -lKeyGenerator
 	./${BUILD_DIR}/KeyGeneratorTest
 	${END_MSG} key_generator
+	
+compile_and_test_fake_transmitters: compile_and_test_key_generator
+	${START_MSG} fake_transmitters
+	${COMPILE_SOURCE} ${NETWORK_GATEWAY_DIR}/FakeTransmitters.c -o ${FAKE_TRANSMITTERS_OBJECT} -I${HEADERS_DIR}	
+	${ARCHIVE} ${BUILD_DIR}/libFakeTransmitters.a ${KEY_GENERATOR_OBJECT} ${RANDOM_OBJECT} ${TIMER_OBJECT} ${KEY_HANDLER_OBJECT} ${FAKE_TRANSMITTERS_OBJECT}
+	${COMPILE_TEST} ${TEST_DIR}/FakeTransmittersTest.c -o ${BUILD_DIR}/FakeTransmittersTest -I${TEST_FRMAWORK_DIR} -I${HEADERS_DIR}	 -L${BUILD_DIR} -lFakeTransmitters
+	./${BUILD_DIR}/FakeTransmittersTest
+	${END_MSG} fake_transmitters
+		

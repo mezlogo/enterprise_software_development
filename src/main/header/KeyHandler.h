@@ -1,5 +1,12 @@
 #include "Key.h"
 
-char compareKeys(Key* key1, Key* key2);
+#ifndef KEY_HANDLER_H
+    #define KEY_HANDLER_H
 
-unsigned int hashCode(Key* key);
+    char compareKeys(Key* key1, Key* key2);
+
+    unsigned int hashCode(Key* key);
+
+    void keyToCharArray(Key* key, char* array);
+
+#endif

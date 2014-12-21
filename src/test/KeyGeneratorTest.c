@@ -37,8 +37,8 @@ void test_isUniq() {
 }
 
 void test_generateUniqKeys() {
-    Key keys[10000];
-    int length = 10000;
+    Key keys[1000];
+    int length = 1000;
     int count = 0;
 
     generateUniqKeys(keys, length);
