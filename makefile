@@ -21,8 +21,6 @@ ARCHIVE = ar -crsv
 RECURSIVE_REMOVE = rm -rf
 CREATE_DIRS = mkdir
 
-
-
 ARRAY_HANDLER_OBJECT = ${BUILD_DIR}/ArrayHandler.o
 SUBHEAP_HANDLER_OBJECT = ${BUILD_DIR}/SubheapHandler.o
 MEMORY_MANAGER_OBJECT = ${BUILD_DIR}/MemoryManager.o
@@ -41,15 +39,16 @@ KEY_HANDLER_OBJECT = ${BUILD_DIR}/KeyHandler.o
 KEY_GENERATOR_OBJECT = ${BUILD_DIR}/KeyGenerator.o
 FAKE_TRANSMITTERS_OBJECT = ${BUILD_DIR}/FakeTransmitters.o
 CLIENT_SERVER_OBJECT = ${BUILD_DIR}/ClientServer.o
+MESSAGE_HANDLER_OBJECT = ${BUILD_DIR}/MessageHandler.o
 
 START_MSG = @echo "<--------Start compile and testing"
 END_MSG = @echo "<--------End compile and testing"
 
-all: compile_and_test_key_handler
+all: compile_and_test_message_handler
 
 run_memory_manager_analyzer: compile_and_test_analyzer
 
-without_time: compile_and_test_memory_manager compile_and_test_cyclic_list compile_and_test_multi_thread_task_runner compile_and_test_logger compile_and_test_client_server
+without_time: compile_and_test_memory_manager compile_and_test_cyclic_list compile_and_test_multi_thread_task_runner compile_and_test_logger compile_and_test_client_server compile_and_test_message_handler
 
 integrate: compile_and_test_memory_manager compile_and_test_size_generator compile_and_test_cyclic_list compile_and_test_single_thread_task_runner compile_and_test_logger compile_and_test_analyzer compile_and_test_client_server
 
@@ -198,3 +197,11 @@ compile_and_test_client_server: make_build_dir
 	${COMPILE_TEST} ${TEST_DIR}/ClientServerTest.c -o ${BUILD_DIR}/ClientServerTest -I${TEST_FRMAWORK_DIR} -I${HEADERS_DIR} -L${BUILD_DIR} -lClientServer
 	./${BUILD_DIR}/ClientServerTest
 	${END_MSG} client_server
+
+compile_and_test_message_handler: compile_and_test_key_handler
+	${START_MSG} message_handler
+	${COMPILE_SOURCE} ${NETWORK_GATEWAY_DIR}/MessageHandler.c -o ${MESSAGE_HANDLER_OBJECT} -I${HEADERS_DIR}	
+	${ARCHIVE} ${BUILD_DIR}/libMessageHandler.a ${MESSAGE_HANDLER_OBJECT} ${KEY_HANDLER_OBJECT}
+	${COMPILE_TEST} ${TEST_DIR}/MessageHandlerTest.c -o ${BUILD_DIR}/MessageHandlerTest -I${TEST_FRMAWORK_DIR} -I${HEADERS_DIR} -L${BUILD_DIR} -lMessageHandler
+	./${BUILD_DIR}/MessageHandlerTest
+	${END_MSG} message_handler
