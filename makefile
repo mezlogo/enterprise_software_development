@@ -40,11 +40,12 @@ LINKED_LIST_OBJECT = ${BUILD_DIR}/LinkedList.o
 KEY_HANDLER_OBJECT = ${BUILD_DIR}/KeyHandler.o
 KEY_GENERATOR_OBJECT = ${BUILD_DIR}/KeyGenerator.o
 FAKE_TRANSMITTERS_OBJECT = ${BUILD_DIR}/FakeTransmitters.o
+CLIENT_SERVER_OBJECT = ${BUILD_DIR}/ClientServer.o
 
 START_MSG = @echo "<--------Start compile and testing"
 END_MSG = @echo "<--------End compile and testing"
 
-all: compile_and_test_fake_transmitters
+all: compile_and_test_client_server
 
 run_memory_manager_analyzer: compile_and_test_analyzer
 
@@ -190,3 +191,10 @@ compile_and_test_fake_transmitters: compile_and_test_key_generator
 	./${BUILD_DIR}/FakeTransmittersTest
 	${END_MSG} fake_transmitters
 		
+compile_and_test_client_server: make_build_dir
+	${START_MSG} client_server
+	${COMPILE_SOURCE} ${NETWORK_GATEWAY_DIR}/ClientServer.c -o ${CLIENT_SERVER_OBJECT} -I${HEADERS_DIR}	
+	${ARCHIVE} ${BUILD_DIR}/libClientServer.a ${CLIENT_SERVER_OBJECT}
+	${COMPILE_TEST} ${TEST_DIR}/ClientServerTest.c -o ${BUILD_DIR}/ClientServerTest -I${TEST_FRMAWORK_DIR} -I${HEADERS_DIR} -L${BUILD_DIR} -lClientServer
+	./${BUILD_DIR}/ClientServerTest
+	${END_MSG} client_server
