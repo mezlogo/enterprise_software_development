@@ -2,10 +2,6 @@
 #include "KeyHandler.h"
 #include "SimpleCUnit.h"
 
-//char compareKeys(Key * key1, Key * key2)
-//unsigned int hashCode(Key * key)
-//void keyToCharArray(Key * key, char * array)
-
 void test_keyToCharArray() {
     Key key = {0x02468ace, 0x1379};
 
@@ -13,12 +9,33 @@ void test_keyToCharArray() {
 
     keyToCharArray(&key, &array[1]);
 
-    assertLongEquals("First should eq last ip byte", 0xce, array[1] & 0xff);
-    assertLongEquals("Second should eq pre last ip byte", 0x8a, array[2]  & 0xff);
+    assertLongEquals("First should eq last ip byte", 		0xce, array[1] & 0xff);
+    assertLongEquals("Second should eq pre last ip byte", 	0x8a, array[2]  & 0xff);
     assertLongEquals("Third should eq after first ip byte", 0x46, array[3]  & 0xff);
-    assertLongEquals("Fourth should eq first ip byte", 0x02, array[4]  & 0xff);
-    assertLongEquals("Fifth should eq last port byte", 0x79, array[5]  & 0xff);
-    assertLongEquals("Sixth should eq first port byte", 0x13, array[6]  & 0xff);
+    assertLongEquals("Fourth should eq first ip byte", 		0x02, array[4]  & 0xff);
+    assertLongEquals("Fifth should eq last port byte", 		0x79, array[5]  & 0xff);
+    assertLongEquals("Sixth should eq first port byte", 	0x13, array[6]  & 0xff);
+}
+
+void test_charArrayToKey() {
+    Key key = {0x02468ace, 0x1379};
+
+    char  array[13];
+    *(array + 1) = 0xff;
+    *(array + 2) = 0xee;
+    *(array + 3) = 0xdd;
+    *(array + 4) = 0xcc;
+    *(array + 5) = 0xbb;
+    *(array + 6) = 0xaa;
+
+    charArrayToKey(&key, &array[1]);
+
+    assertLongEquals("First should eq last ip byte", 		0xff, array[1] & 0xff);
+    assertLongEquals("Second should eq pre last ip byte", 	0xee, array[2]  & 0xff);
+    assertLongEquals("Third should eq after first ip byte", 0xdd, array[3]  & 0xff);
+    assertLongEquals("Fourth should eq first ip byte", 		0xcc, array[4]  & 0xff);
+    assertLongEquals("Fifth should eq last port byte", 		0xbb, array[5]  & 0xff);
+    assertLongEquals("Sixth should eq first port byte", 	0xaa, array[6]  & 0xff);
 }
 
 void test_hashCode() {
@@ -67,9 +84,10 @@ void test_compareKeys() {
 }
 
 int main(int argc, char** argv) {
-    testSuit("Key handler suit", 3,
+    testSuit("Key handler suit", 4,
 	     initTestCase("Hash code test", &test_hashCode),
 	     initTestCase("Key to char array test", &test_keyToCharArray),
+	     initTestCase("Char array to key test", &test_charArrayToKey),
 	     initTestCase("Compare test", &test_compareKeys));
     return 0;
 }

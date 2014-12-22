@@ -1,5 +1,12 @@
 #include "Key.h"
 
+void charArrayToKey(Key* key, char* array) {
+    unsigned int* ip = (unsigned int*) array;
+    unsigned short* port = (unsigned short*) &array[4];
+    key->ip = *ip;
+    key->port = *port;
+}
+
 void keyToCharArray(Key* key, char* array) {
     unsigned int* ip = (unsigned int*) array;
     unsigned short* port = (unsigned short*) &array[4];

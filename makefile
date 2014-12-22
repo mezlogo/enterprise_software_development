@@ -45,13 +45,13 @@ CLIENT_SERVER_OBJECT = ${BUILD_DIR}/ClientServer.o
 START_MSG = @echo "<--------Start compile and testing"
 END_MSG = @echo "<--------End compile and testing"
 
-all: compile_and_test_client_server
+all: compile_and_test_key_handler
 
 run_memory_manager_analyzer: compile_and_test_analyzer
 
-without_time: compile_and_test_memory_manager compile_and_test_cyclic_list compile_and_test_multi_thread_task_runner compile_and_test_logger
+without_time: compile_and_test_memory_manager compile_and_test_cyclic_list compile_and_test_multi_thread_task_runner compile_and_test_logger compile_and_test_client_server
 
-integrate: compile_and_test_memory_manager compile_and_test_size_generator compile_and_test_cyclic_list compile_and_test_single_thread_task_runner compile_and_test_logger compile_and_test_analyzer
+integrate: compile_and_test_memory_manager compile_and_test_size_generator compile_and_test_cyclic_list compile_and_test_single_thread_task_runner compile_and_test_logger compile_and_test_analyzer compile_and_test_client_server
 
 clean:
 	${RECURSIVE_REMOVE} ${BUILD_DIR}
