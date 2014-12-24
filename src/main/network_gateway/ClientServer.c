@@ -8,6 +8,7 @@
 #include <netdb.h>
 
 #include "Key.h"
+#include "Configuration.h"
 
 void error(const char* msg) {
     perror(msg);
@@ -19,7 +20,7 @@ void error(const char* msg) {
 /////////////////////////////
 
 #define MESSAGE_TYPE_BYTE_COUNT 1
-int maxMessageSize = 13;
+int maxMessageSize = MESSAGE_SIZE;
 
 int serverSocket;
 int serverConnectClientSocket;

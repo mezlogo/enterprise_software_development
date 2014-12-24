@@ -4,23 +4,23 @@
 
 void test_case() {
     reset();
-    logAllocate(20);
-    logAllocate(1);
-    logAllocate(320);
-    logAllocate(220);
-    logRemove(110);
-    logRemove(21);
-    logRemove(155);
-    logRemove(1);
-    logRemove(8);
+    logPrimary(20);
+    logPrimary(1);
+    logPrimary(320);
+    logPrimary(220);
+    logSecondary(110);
+    logSecondary(21);
+    logSecondary(155);
+    logSecondary(1);
+    logSecondary(8);
     show();
 
     reset();
-    logRemove(1559);
-    logRemove(154);
-    logAllocate(208);
-    logAllocate(19);
-    logRemove(825);
+    logSecondary(1559);
+    logSecondary(154);
+    logPrimary(208);
+    logPrimary(19);
+    logSecondary(825);
     show();
 }
 

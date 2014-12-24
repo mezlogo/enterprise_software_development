@@ -1,23 +1,23 @@
 #include <stdio.h>
 #include "Configuration.h"
 
-unsigned long allocateIndex;
-unsigned long removeIndex;
+unsigned long primaryIndex;
+unsigned long secondaryIndex;
 
-unsigned long allocateMeasuring[ITERATION_COUNT];
-unsigned long removeMeasuring[ITERATION_COUNT];
+unsigned long primaryMeasuring[LOGGER_SIZE];
+unsigned long secondaryMeasuring[LOGGER_SIZE];
 
 void reset() {
-    allocateIndex = 0;
-    removeIndex = 0;
+    primaryIndex = 0;
+    secondaryIndex = 0;
 }
 
-void logAllocate(unsigned long time) {
-    allocateMeasuring[allocateIndex++] = time;
+void logPrimary(unsigned long time) {
+    primaryMeasuring[primaryIndex++] = time;
 }
 
-void logRemove(unsigned long time) {
-    removeMeasuring[removeIndex++] = time;
+void logSecondary(unsigned long time) {
+    secondaryMeasuring[secondaryIndex++] = time;
 }
 
 void printArray(unsigned long* array, long length) {
@@ -64,6 +64,6 @@ void printMeasuring(unsigned long* array, unsigned long length, char* measuringN
 }
 
 void show() {
-    printMeasuring(allocateMeasuring, allocateIndex, "Allocate time: ");
-    printMeasuring(removeMeasuring, removeIndex, "Remove time: ");
+    printMeasuring(primaryMeasuring, primaryIndex, "Primary time: ");
+    printMeasuring(secondaryMeasuring, secondaryIndex, "Secondary time: ");
 }

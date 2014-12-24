@@ -1,7 +1,7 @@
 void reset();
 
-void logAllocate(unsigned long time);
+void logPrimary(unsigned long time);
 
-void logRemove(unsigned long time);
+void logSecondary(unsigned long time);
 
 void show();

@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "Key.h"
 
 void charArrayToKey(Key* key, char* array) {
@@ -15,6 +16,10 @@ void keyToCharArray(Key* key, char* array) {
 }
 
 char compareKeys(Key* key1, Key* key2) {
+    if (key1 == key2) { return 0; }
+    else if (NULL == key1) { return -1; }
+    else if (NULL == key2) { return 1; }
+
     //Compare ip: if key1.ip less that key2.ip than -1 etc
     char result = (key1->ip < key2->ip ? -1 : (key1->ip == key2->ip ? 0 : 1) );
     //Compare port, only if ips eq
@@ -24,5 +29,5 @@ char compareKeys(Key* key1, Key* key2) {
 }
 
 unsigned int hashCode(Key* key) {
-    return key->ip;
+    return NULL == key ? 0 : key->ip;
 }

@@ -24,7 +24,7 @@ int parent() {
     int result = CRASH;
 
     if (NULL != allocateVariable) {
-	logAllocate(time);
+	logPrimary(time);
 	put(allocateVariable);
 	result = NO_CRASH;
     }
@@ -33,7 +33,7 @@ int parent() {
 }
 
 void child() {
-    if (REMOVE_CHANCE < generateIntByWidth(REMOVE_MAX_CHANCE)) {
+    if (generateIntByWidth(REMOVE_MAX_CHANCE) < REMOVE_CHANCE) {
 	char* toRemove = next();
 	int result = 0;
 
@@ -41,7 +41,7 @@ void child() {
 	result = removeVar(toRemove);
 	unsigned long time = calcOffsetULong(startTime);
 
-	if (VARIABLE_REMOVE_SUCCESS == result) 	{ logRemove(time); }
+	if (VARIABLE_REMOVE_SUCCESS == result) 	{ logSecondary(time); }
 	else 									{ printf("%s", "Remove issue occurs\n"); }
     }
 }

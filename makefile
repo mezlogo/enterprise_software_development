@@ -34,23 +34,25 @@ LOGGER_OBJECT = ${BUILD_DIR}/Logger.o
 ANALYZER_API_OBJECT = ${BUILD_DIR}/AnalyzerAPI.o
 MULTI_THREAD_TASK_RUNNER_OBJECT = ${BUILD_DIR}/MultiThreadTaskRunner.o
 
-LINKED_LIST_OBJECT = ${BUILD_DIR}/LinkedList.o
 KEY_HANDLER_OBJECT = ${BUILD_DIR}/KeyHandler.o
 KEY_GENERATOR_OBJECT = ${BUILD_DIR}/KeyGenerator.o
 FAKE_TRANSMITTERS_OBJECT = ${BUILD_DIR}/FakeTransmitters.o
 CLIENT_SERVER_OBJECT = ${BUILD_DIR}/ClientServer.o
 MESSAGE_HANDLER_OBJECT = ${BUILD_DIR}/MessageHandler.o
 
+LINKED_LIST_HANDER_OBJECT = ${BUILD_DIR}/LinkedListHandler.o
+HASH_TABLE_OBJECT = ${BUILD_DIR}/HashTable.o
+
 START_MSG = @echo "<--------Start compile and testing"
 END_MSG = @echo "<--------End compile and testing"
 
-all: compile_and_test_message_handler
+all: compile_and_test_hash_table
 
-run_memory_manager_analyzer: compile_and_test_analyzer
+memory_manager_analyzer: compile_and_test_analyzer
 
-without_time: compile_and_test_memory_manager compile_and_test_cyclic_list compile_and_test_multi_thread_task_runner compile_and_test_logger compile_and_test_client_server compile_and_test_message_handler
+without_time: compile_and_test_memory_manager compile_and_test_cyclic_list compile_and_test_multi_thread_task_runner compile_and_test_logger compile_and_test_client_server compile_and_test_message_handler compile_and_test_hash_table
 
-integrate: compile_and_test_memory_manager compile_and_test_size_generator compile_and_test_cyclic_list compile_and_test_single_thread_task_runner compile_and_test_logger compile_and_test_analyzer compile_and_test_client_server
+integrate: compile_and_test_memory_manager compile_and_test_size_generator compile_and_test_cyclic_list compile_and_test_single_thread_task_runner compile_and_test_logger compile_and_test_analyzer compile_and_test_client_server compile_and_test_message_handler
 
 clean:
 	${RECURSIVE_REMOVE} ${BUILD_DIR}
@@ -160,12 +162,6 @@ compile_and_test_analyzer: compile_and_test_size_generator compile_and_test_cycl
 
 ########################Network gateway###################################
 
-compile_and_test_linked_list: make_build_dir
-	${START_MSG} linked_list
-	${COMPILE_TEST} ${TEST_DIR}/LinkedListTest.c -o ${BUILD_DIR}/LinkedListTest -I${TEST_FRMAWORK_DIR} -I${HEADERS_DIR}	
-	./${BUILD_DIR}/LinkedListTest
-	${END_MSG} linked_list
-
 compile_and_test_key_handler: make_build_dir
 	${START_MSG} key_handler
 	${COMPILE_SOURCE} ${NETWORK_GATEWAY_DIR}/KeyHandler.c -o ${KEY_HANDLER_OBJECT} -I${HEADERS_DIR}	
@@ -198,10 +194,35 @@ compile_and_test_client_server: make_build_dir
 	./${BUILD_DIR}/ClientServerTest
 	${END_MSG} client_server
 
-compile_and_test_message_handler: compile_and_test_key_handler
+compile_and_test_message_handler: compile_and_test_logger compile_and_test_timer compile_and_test_key_handler
 	${START_MSG} message_handler
 	${COMPILE_SOURCE} ${NETWORK_GATEWAY_DIR}/MessageHandler.c -o ${MESSAGE_HANDLER_OBJECT} -I${HEADERS_DIR}	
-	${ARCHIVE} ${BUILD_DIR}/libMessageHandler.a ${MESSAGE_HANDLER_OBJECT} ${KEY_HANDLER_OBJECT}
+	${ARCHIVE} ${BUILD_DIR}/libMessageHandler.a ${MESSAGE_HANDLER_OBJECT} ${KEY_HANDLER_OBJECT} ${LOGGER_OBJECT} ${TIMER_OBJECT}
 	${COMPILE_TEST} ${TEST_DIR}/MessageHandlerTest.c -o ${BUILD_DIR}/MessageHandlerTest -I${TEST_FRMAWORK_DIR} -I${HEADERS_DIR} -L${BUILD_DIR} -lMessageHandler
 	./${BUILD_DIR}/MessageHandlerTest
 	${END_MSG} message_handler
+
+compile_and_test_network_gateway: compile_and_test_logger compile_and_test_fake_transmitters compile_and_test_message_handler
+	${START_MSG} network_gateway
+	${COMPILE_SOURCE} ${NETWORK_GATEWAY_DIR}/MessageHandler.c -o ${MESSAGE_HANDLER_OBJECT} -I${HEADERS_DIR}	
+	${ARCHIVE} ${BUILD_DIR}/libMessageHandler.a ${MESSAGE_HANDLER_OBJECT} ${KEY_HANDLER_OBJECT} ${LOGGER_OBJECT} ${TIMER_OBJECT}
+	${COMPILE_TEST} ${TEST_DIR}/MessageHandlerTest.c -o ${BUILD_DIR}/MessageHandlerTest -I${TEST_FRMAWORK_DIR} -I${HEADERS_DIR} -L${BUILD_DIR} -lMessageHandler
+	./${BUILD_DIR}/MessageHandlerTest
+	${END_MSG} network_gateway
+
+########################Collections###################################
+compile_and_test_linked_list_handler: compile_and_test_key_handler
+	${START_MSG} linked_list_handler
+	${COMPILE_SOURCE} ${NETWORK_GATEWAY_DIR}/LinkedListHandler.c -o ${LINKED_LIST_HANDER_OBJECT} -I${HEADERS_DIR}	
+	${ARCHIVE} ${BUILD_DIR}/libLinkedListHandler.a ${LINKED_LIST_HANDER_OBJECT} ${KEY_HANDLER_OBJECT}
+	${COMPILE_TEST} ${TEST_DIR}/LinkedListHandlerTest.c -o ${BUILD_DIR}/LinkedListHandlerTest -I${TEST_FRMAWORK_DIR} -I${HEADERS_DIR} -L${BUILD_DIR} -lLinkedListHandler
+	./${BUILD_DIR}/LinkedListHandlerTest
+	${END_MSG} linked_list_handler
+
+compile_and_test_hash_table: compile_and_test_linked_list_handler compile_and_test_memory_manager compile_and_test_key_handler
+	${START_MSG} hash_table
+	${COMPILE_SOURCE} ${NETWORK_GATEWAY_DIR}/HashTable.c -o ${HASH_TABLE_OBJECT} -I${HEADERS_DIR}	
+	${ARCHIVE} ${BUILD_DIR}/libHashTable.a ${LINKED_LIST_HANDER_OBJECT} ${HASH_TABLE_OBJECT} ${MEMORY_MANAGER_OBJECT} ${SUBHEAP_HANDLER_OBJECT} ${ARRAY_HANDLER_OBJECT} ${KEY_HANDLER_OBJECT}
+	${COMPILE_TEST} ${TEST_DIR}/HashTableTest.c -o ${BUILD_DIR}/HashTableTest -I${TEST_FRMAWORK_DIR} -I${HEADERS_DIR} -L${BUILD_DIR} -lHashTable
+	./${BUILD_DIR}/HashTableTest
+	${END_MSG} hash_table

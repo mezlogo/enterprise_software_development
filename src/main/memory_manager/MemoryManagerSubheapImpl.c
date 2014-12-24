@@ -5,7 +5,7 @@
 #include "SubheapHandler.h"
 
 //Состояние управляющего памяти
-char heap[MAX_HEAP_SIZE];
+char heap[MAX_HEAP_SIZE] = {0};
 char variables[MAX_VARIABLES_COUNT];
 Subheap subheaps[MAX_HEAPS_COUNT];
 
@@ -115,6 +115,7 @@ int init(int* variablesSize, int* variablesCount, char subheapCount) {
 
     //Сбрасываем занятые переменные
     resetAllChars(variables, sumOfArrayVarriables);
+    resetAllChars(heap, sumOfMul);
 
     //Кэшируем максимальный размер и адрес последнего байта
     maxVariablesSize = subheaps[currentSubheapCount - 1].variablesSize;
