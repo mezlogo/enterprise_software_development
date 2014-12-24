@@ -4,7 +4,7 @@
 #include "KeyHandler.h"
 #include "LinkedListNode.h"
 #include "LinkedListHandler.h"
-#include "MemoryManager.h"
+#include "MemoryManagerSubheap.h"
 #include "Configuration.h"
 
 LinkedListNode** hashTable;
@@ -51,7 +51,7 @@ char findHashTable(Key* key) {
     return NULL == result ? FIND_FAIL : FIND_SUCCESS;
 }
 
-char alter(Key* source, Key* target) {
+char alterHashTable(Key* source, Key* target) {
     if (NULL == source)
     { return ALTER_FAIL; }
 
@@ -79,8 +79,8 @@ char alter(Key* source, Key* target) {
     }
 
     if (NULL == target) {
-	removeVar((char*) sourceNode->key);
-	removeVar((char*) sourceNode);
+	//removeVar((char*) sourceNode->key);
+	//removeVar((char*) sourceNode);
 	return REMOVE_SUCCESS;
     }
 
@@ -94,8 +94,18 @@ char alter(Key* source, Key* target) {
 }
 
 char initHashTable(int size) {
+    int variablesSize[3] = {sizeof(Key), sizeof(LinkedListNode), size * sizeof(LinkedListNode*)};
+    int variablesCount[3] = {size, size, 1};
+    char subheapCount = 3;
+
+    if (INITIAL_SUCCESS != init(variablesSize, variablesCount, subheapCount)) {
+	printf("%s", "Memory manager can't init\n");
+	exit(-1);
+    }
+
     hashTableSize = size;
-    hashTable = (LinkedListNode**) allocate(hashTableSize * sizeof(LinkedListNode*));
+    hashTable = (LinkedListNode**) allocate(size * sizeof(LinkedListNode*));
+
 
     return (NULL == hashTable) ? HASH_TABLE_INIT_FAIL : HASH_TABLE_INIT_SUCCESS;
 }

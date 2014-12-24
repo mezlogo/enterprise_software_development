@@ -136,6 +136,7 @@ void sendMessage(char* message) {
 
     if (sendStatus < 0)
     { error("ERROR writing to socket"); }
+
 }
 
 void closeClient() {

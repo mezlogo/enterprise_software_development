@@ -18,7 +18,7 @@ void setTransmitters(Key* newTransmitters, unsigned int newSize) {
  * 2) получить случайный передатчик
  * 3) установить данные передатчика в сообщение
  * 4) если входной параметр (итерация) 50-ая, то изменить данные передатчика
- *
+ *		и записать измененые данные в сообщение
  * */
 void generateMessage(char* message, unsigned long value) {
     message[0] = MESSAGE_TYPE_REGULAR;

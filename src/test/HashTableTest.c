@@ -9,9 +9,9 @@
 
 #include "SimpleCUnit.h"
 
-#define initMM(nodesCount)	int variablesSize[3] = {sizeof(Key), sizeof(LinkedListNode), nodesCount * sizeof(LinkedListNode*)};	int variablesCount[3] = {nodesCount, nodesCount, 1};	char subheapCount = 3;	assertLongEquals("Should init memory manager", INITIAL_SUCCESS, init(variablesSize, variablesCount, subheapCount)); assertLongEquals("Shouldn't init hash table", HASH_TABLE_INIT_FAIL, initHashTable(nodesCount + 1)); 	assertLongEquals("Should init hash table", HASH_TABLE_INIT_SUCCESS, initHashTable(nodesCount));
+#define initMM(nodesCount)	/*int variablesSize[3] = {sizeof(Key), sizeof(LinkedListNode), nodesCount * sizeof(LinkedListNode*)};	int variablesCount[3] = {nodesCount, nodesCount, 1};	char subheapCount = 3;	assertLongEquals("Should init memory manager", INITIAL_SUCCESS, init(variablesSize, variablesCount, subheapCount)); assertLongEquals("Shouldn't init hash table", HASH_TABLE_INIT_FAIL, initHashTable(nodesCount + 1));*/ 	assertLongEquals("Should init hash table", HASH_TABLE_INIT_SUCCESS, initHashTable(nodesCount));
 
-void test_alter() {
+void test_alterHashTable() {
     int nodesCount = 4;
     initMM(nodesCount);
 
@@ -41,15 +41,15 @@ void test_alter() {
     assertLongEquals("Shouldn't find", FIND_FAIL, findHashTable(&key4));
     assertLongEquals("Shouldn't find", FIND_FAIL, findHashTable(&key3));
 
-    assertLongEquals("Should alter", ALTER_SUCCESS, alter(&key1, &key5));
+    assertLongEquals("Should alterHashTable", ALTER_SUCCESS, alterHashTable(&key1, &key5));
     assertLongEquals("Shouldn find", FIND_SUCCESS, findHashTable(&key5));
     assertLongEquals("Shouldn't find", FIND_FAIL, findHashTable(&key1));
 
-    assertLongEquals("Shouldn remove", REMOVE_SUCCESS, alter(&key5, NULL));
+    assertLongEquals("Shouldn remove", REMOVE_SUCCESS, alterHashTable(&key5, NULL));
     assertLongEquals("Shouldn't find", FIND_FAIL, findHashTable(&key5));
 
-    assertLongEquals("Shouldn't alter", ALTER_FAIL, alter(NULL, &key2));
-    assertLongEquals("Shouldn't alter", ALTER_FAIL, alter(&key5, &key3));
+    assertLongEquals("Shouldn't alterHashTable", ALTER_FAIL, alterHashTable(NULL, &key2));
+    assertLongEquals("Shouldn't alterHashTable", ALTER_FAIL, alterHashTable(&key5, &key3));
 }
 
 void test_find() {
@@ -84,7 +84,7 @@ int main(int argc, char** argv) {
     testSuit("Hash table suit", 3,
 	     initTestCase("Find test", &test_insert),
 	     initTestCase("Inser test", &test_find),
-	     initTestCase("Alter test", &test_alter)
+	     initTestCase("Alter test", &test_alterHashTable)
 	    );
     return 0;
 }

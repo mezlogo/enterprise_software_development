@@ -24,7 +24,6 @@ void getSecondKey(Key* key, char* message) {
 }
 
 char handleMessage(char* message) {
-    char collectionStatus;
     unsigned long startTime;
     unsigned long measureTime;
     Key primaryKey;
@@ -34,25 +33,25 @@ char handleMessage(char* message) {
 
     switch (getMessageStatus(message)) {
 
-    case MESSAGE_TYPE_REGULAR:
-	startTime			= getULongNano();
-	collectionStatus	= collection.find(&primaryKey);
-	measureTime			= calcOffsetULong(startTime);
+    case MESSAGE_TYPE_REGULAR: {
+	    startTime				= getULongNano();
+	    char collectionStatus	= collection.find(&primaryKey);
+	    measureTime				= calcOffsetULong(startTime);
 
-	if (FIND_SUCCESS == collectionStatus)	{ logPrimary(measureTime); }
-	else 									{ collection.insert(&primaryKey); }
-
+	    if (FIND_SUCCESS == collectionStatus)	{ logPrimary(measureTime); }
+	    else 									{ collection.insert(&primaryKey); }
+	}
 	break;
 
-    case MESSAGE_TYPE_ALTER:
-	getSecondKey(&secondKey, message);
+    case MESSAGE_TYPE_ALTER: {
+	    getSecondKey(&secondKey, message);
 
-	startTime 	= getULongNano();
-	collection.alter(&primaryKey, &secondKey);
-	measureTime	= calcOffsetULong(startTime);
+	    startTime 	= getULongNano();
+	    collection.alter(&primaryKey, &secondKey);
+	    measureTime	= calcOffsetULong(startTime);
 
-	logSecondary(measureTime);
-
+	    logSecondary(measureTime);
+	}
 	break;
 
     default:

@@ -48,7 +48,7 @@ void test_message_handler() {
 
 
     assertLongEquals("Should be called find", 1, isWasFind);
-    assertLongEquals("Should be called alter", 1, isWasAlter);
+    assertLongEquals("Should be called alterHashTable", 1, isWasAlter);
     assertLongEquals("Should be called insert", 1, isWasInsert);
 }
 

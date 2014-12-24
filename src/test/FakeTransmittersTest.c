@@ -28,7 +28,7 @@ void test_case() {
     generateMessage(message, 0);
     generateMessage(extraMessage, 1);
 
-    assertLongEquals("Returned msg should has alter type", 2, *msg & 0xff);
+    assertLongEquals("Returned msg should has alterHashTable type", 2, *msg & 0xff);
     assertLongEquals("Returned msg again should has regular type", 1, extraMessage[0] & 0xff);
     assertLongEquals("Returned msg should eq what send", 0x78, msg[1] & 0xff);
     assertLongEquals("Returned msg should eq what send", 0x9a, msg[6] & 0xff);

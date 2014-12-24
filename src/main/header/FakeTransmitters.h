@@ -1,3 +1,5 @@
+#include "Key.h"
+
 void generateMessage(char* message, long value);
 
 void initTransmitters();
