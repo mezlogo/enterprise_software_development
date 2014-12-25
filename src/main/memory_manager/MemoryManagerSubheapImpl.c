@@ -50,7 +50,11 @@ char* allocate(int size) {
 	return NULL;
     }
 
-    return currentSubheap->heap + currentSubheap->variablesSize * allocateVariableIndex;
+    char* result = currentSubheap->heap + currentSubheap->variablesSize * allocateVariableIndex;
+
+    resetAllChars(result, size);
+
+    return result;
 }
 
 /*Освобождение памяти
@@ -115,7 +119,6 @@ int init(int* variablesSize, int* variablesCount, char subheapCount) {
 
     //Сбрасываем занятые переменные
     resetAllChars(variables, sumOfArrayVarriables);
-    resetAllChars(heap, sumOfMul);
 
     //Кэшируем максимальный размер и адрес последнего байта
     maxVariablesSize = subheaps[currentSubheapCount - 1].variablesSize;

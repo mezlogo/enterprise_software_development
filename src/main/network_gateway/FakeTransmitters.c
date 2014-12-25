@@ -8,6 +8,8 @@ Key staticTransmitters[TRANSMITTERS_COUNT];
 Key* transmitters = staticTransmitters;
 unsigned int size = TRANSMITTERS_COUNT;
 
+Key* getTransmitters() { return transmitters; }
+
 void setTransmitters(Key* newTransmitters, unsigned int newSize) {
     transmitters = newTransmitters;
     size = newSize;

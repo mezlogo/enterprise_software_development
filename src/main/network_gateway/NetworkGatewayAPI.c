@@ -1,10 +1,7 @@
 #include <stdio.h>
 
-#include <sys/types.h> /* pid_t */
-#include <sys/wait.h>  /* waitpid */
-#include <sys/mman.h>  /* mmap */
-#include <stdlib.h>    /* exit */
-#include <unistd.h>    /* _exit, fork */
+#include <stdlib.h>
+#include <unistd.h>
 #include <string.h>
 
 #include <pthread.h>
@@ -12,6 +9,7 @@
 #include "ClientServer.h"
 #include "Logger.h"
 #include "HashTable.h"
+#include "AVLTree.h"
 #include "Configuration.h"
 #include "FakeTransmitters.h"
 #include "Collection.h"
@@ -46,10 +44,18 @@ void initClientServer(int port) {
 
 }
 
-void initBlock() {
+void initBlock(Collection* collection) {
     printf("%s", "<<<<Reinit block>>>>\n");
     reset();
     initTransmitters();
+
+    Key* transmitters = getTransmitters();
+
+    int index = 0;
+    for (; index < TRANSMITTERS_COUNT; index++)
+	if (INSERT_FAIL == collection->insert(&transmitters[index]))
+	{ printf("%s", "\nInit insert error!\n"); }
+
     initClientServer(2500);
 }
 
@@ -108,17 +114,28 @@ void startAnalyzer() {
     closeServer();
 }
 
-void start() {
-    Collection collection = {};
-
-    collection.insert = &insertHashTable;
-    collection.find = &findHashTable;
-    collection.alter = &alterHashTable;
-
-    initBlock();
-    initHashTable(TRANSMITTERS_COUNT);
-    initCollection(&collection);
+void startForCollection(Collection* collection) {
+    initBlock(collection);
+    initCollection(collection);
 
     startAnalyzer();
     show();
+}
+
+void start() {
+    Collection collection = {};
+
+    printf("%s", "\n\n<<<<<HASH TABLE>>>>>\n\n");
+    initHashTable(TRANSMITTERS_COUNT);
+    collection.insert = &insertHashTable;
+    collection.find = &findHashTable;
+    collection.alter = &alterHashTable;
+    startForCollection(&collection);
+
+    printf("%s", "\n\n<<<<<AVL TREE>>>>>\n\n");
+    initAVLTree(TRANSMITTERS_COUNT);
+    collection.insert = &insertAVLTree;
+    collection.find = &findAVLTree;
+    collection.alter = &alterAVLTree;
+    startForCollection(&collection);
 }

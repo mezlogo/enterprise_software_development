@@ -42,6 +42,8 @@ MESSAGE_HANDLER_OBJECT = ${BUILD_DIR}/MessageHandler.o
 NETWORK_GATEWAY_API_OBJECT = ${BUILD_DIR}/NetworkGatewayAPI.o
 
 LINKED_LIST_HANDER_OBJECT = ${BUILD_DIR}/LinkedListHandler.o
+AVL_NODE_HANDER_OBJECT = ${BUILD_DIR}/AVLNodeHandler.o
+AVL_TREE_OBJECT = ${BUILD_DIR}/AVLTree.o
 HASH_TABLE_OBJECT = ${BUILD_DIR}/HashTable.o
 
 START_MSG = @echo "<--------Start compile and testing"
@@ -50,6 +52,8 @@ END_MSG = @echo "<--------End compile and testing"
 all: compile_and_test_network_gateway_api
 
 memory_manager_analyzer: compile_and_test_analyzer
+
+network_gateway_api: compile_and_test_network_gateway_api
 
 without_time: compile_and_test_memory_manager compile_and_test_cyclic_list compile_and_test_multi_thread_task_runner compile_and_test_logger compile_and_test_client_server compile_and_test_message_handler compile_and_test_hash_table
 
@@ -163,6 +167,15 @@ compile_and_test_analyzer: compile_and_test_size_generator compile_and_test_cycl
 
 
 ########################Collections###################################
+	
+compile_and_test_key_handler: make_build_dir
+	${START_MSG} key_handler
+	${COMPILE_SOURCE} ${NETWORK_GATEWAY_DIR}/KeyHandler.c -o ${KEY_HANDLER_OBJECT} -I${HEADERS_DIR}	
+	${ARCHIVE} ${BUILD_DIR}/libKeyHandler.a ${KEY_HANDLER_OBJECT}
+	${COMPILE_TEST} ${TEST_DIR}/KeyHandlerTest.c -o ${BUILD_DIR}/KeyHandlerTest -I${TEST_FRMAWORK_DIR} -I${HEADERS_DIR}	 -L${BUILD_DIR} -lKeyHandler
+	./${BUILD_DIR}/KeyHandlerTest
+	${END_MSG} key_handler
+	
 compile_and_test_linked_list_handler: compile_and_test_key_handler
 	${START_MSG} linked_list_handler
 	${COMPILE_SOURCE} ${NETWORK_GATEWAY_DIR}/LinkedListHandler.c -o ${LINKED_LIST_HANDER_OBJECT} -I${HEADERS_DIR}	
@@ -179,14 +192,23 @@ compile_and_test_hash_table: compile_and_test_linked_list_handler compile_and_te
 	./${BUILD_DIR}/HashTableTest
 	${END_MSG} hash_table
 
-compile_and_test_key_handler: make_build_dir
-	${START_MSG} key_handler
-	${COMPILE_SOURCE} ${NETWORK_GATEWAY_DIR}/KeyHandler.c -o ${KEY_HANDLER_OBJECT} -I${HEADERS_DIR}	
-	${ARCHIVE} ${BUILD_DIR}/libKeyHandler.a ${KEY_HANDLER_OBJECT}
-	${COMPILE_TEST} ${TEST_DIR}/KeyHandlerTest.c -o ${BUILD_DIR}/KeyHandlerTest -I${TEST_FRMAWORK_DIR} -I${HEADERS_DIR}	 -L${BUILD_DIR} -lKeyHandler
-	./${BUILD_DIR}/KeyHandlerTest
-	${END_MSG} key_handler
+compile_and_test_avl_node_handler: compile_and_test_key_handler
+	${START_MSG} avl_node_handler
+	${COMPILE_SOURCE} ${NETWORK_GATEWAY_DIR}/AVLNodeHandler.c -o ${AVL_NODE_HANDER_OBJECT} -I${HEADERS_DIR}	
+	${ARCHIVE} ${BUILD_DIR}/libAVLNodeHandler.a ${AVL_NODE_HANDER_OBJECT} ${KEY_HANDLER_OBJECT}
+	${COMPILE_TEST} ${TEST_DIR}/AVLNodeHandlerTest.c -o ${BUILD_DIR}/AVLNodeHandlerTest -I${TEST_FRMAWORK_DIR} -I${HEADERS_DIR} -L${BUILD_DIR} -lAVLNodeHandler
+	./${BUILD_DIR}/AVLNodeHandlerTest
+	${END_MSG} avl_node_handler	
 
+compile_and_test_avl_tree: compile_and_test_key_handler compile_and_test_memory_manager compile_and_test_avl_node_handler
+	${START_MSG} avl_tree
+	${COMPILE_SOURCE} ${NETWORK_GATEWAY_DIR}/AVLTree.c -o ${AVL_TREE_OBJECT} -I${HEADERS_DIR}	
+	${ARCHIVE} ${BUILD_DIR}/libAVLTree.a ${AVL_TREE_OBJECT} ${AVL_NODE_HANDER_OBJECT} ${KEY_HANDLER_OBJECT}  ${MEMORY_MANAGER_OBJECT} ${SUBHEAP_HANDLER_OBJECT} ${ARRAY_HANDLER_OBJECT}
+	${COMPILE_TEST} ${TEST_DIR}/AVLTreeTest.c -o ${BUILD_DIR}/AVLTreeTest -I${TEST_FRMAWORK_DIR} -I${HEADERS_DIR} -L${BUILD_DIR} -lAVLTree
+	./${BUILD_DIR}/AVLTreeTest
+	${END_MSG} avl_tree	
+
+########################Network gateway###################################	
 compile_and_test_key_generator: compile_and_test_key_handler compile_and_test_random
 	${START_MSG} key_generator
 	${COMPILE_SOURCE} ${NETWORK_GATEWAY_DIR}/KeyGenerator.c -o ${KEY_GENERATOR_OBJECT} -I${HEADERS_DIR}	
@@ -194,8 +216,7 @@ compile_and_test_key_generator: compile_and_test_key_handler compile_and_test_ra
 	${COMPILE_TEST} ${TEST_DIR}/KeyGeneratorTest.c -o ${BUILD_DIR}/KeyGeneratorTest -I${TEST_FRMAWORK_DIR} -I${HEADERS_DIR}	 -L${BUILD_DIR} -lKeyGenerator
 	./${BUILD_DIR}/KeyGeneratorTest
 	${END_MSG} key_generator
-
-########################Network gateway###################################	
+	
 compile_and_test_fake_transmitters: compile_and_test_key_generator
 	${START_MSG} fake_transmitters
 	${COMPILE_SOURCE} ${NETWORK_GATEWAY_DIR}/FakeTransmitters.c -o ${FAKE_TRANSMITTERS_OBJECT} -I${HEADERS_DIR}	
@@ -220,10 +241,10 @@ compile_and_test_message_handler: compile_and_test_logger compile_and_test_timer
 	./${BUILD_DIR}/MessageHandlerTest
 	${END_MSG} message_handler
 	
-compile_and_test_network_gateway_api: compile_and_test_logger compile_and_test_fake_transmitters compile_and_test_message_handler compile_and_test_hash_table compile_and_test_message_handler compile_and_test_memory_manager compile_and_test_client_server
+compile_and_test_network_gateway_api: compile_and_test_logger compile_and_test_fake_transmitters compile_and_test_message_handler compile_and_test_hash_table compile_and_test_message_handler compile_and_test_memory_manager compile_and_test_client_server compile_and_test_avl_tree
 	${START_MSG} network_gateway_api 
 	${COMPILE_SOURCE} ${NETWORK_GATEWAY_DIR}/NetworkGatewayAPI.c -o ${NETWORK_GATEWAY_API_OBJECT} -I${HEADERS_DIR}
-	${ARCHIVE} ${BUILD_DIR}/libNetworkGatewayAPI.a ${NETWORK_GATEWAY_API_OBJECT} ${LOGGER_OBJECT} ${KEY_GENERATOR_OBJECT} ${RANDOM_OBJECT} ${TIMER_OBJECT} ${KEY_HANDLER_OBJECT} ${FAKE_TRANSMITTERS_OBJECT} ${LINKED_LIST_HANDER_OBJECT} ${HASH_TABLE_OBJECT} ${MEMORY_MANAGER_OBJECT} ${SUBHEAP_HANDLER_OBJECT} ${ARRAY_HANDLER_OBJECT} ${MESSAGE_HANDLER_OBJECT} ${KEY_HANDLER_OBJECT} ${LOGGER_OBJECT} ${TIMER_OBJECT} ${CLIENT_SERVER_OBJECT}
+	${ARCHIVE} ${BUILD_DIR}/libNetworkGatewayAPI.a ${NETWORK_GATEWAY_API_OBJECT} ${LOGGER_OBJECT} ${KEY_GENERATOR_OBJECT} ${RANDOM_OBJECT} ${TIMER_OBJECT} ${KEY_HANDLER_OBJECT} ${FAKE_TRANSMITTERS_OBJECT} ${LINKED_LIST_HANDER_OBJECT} ${HASH_TABLE_OBJECT} ${MEMORY_MANAGER_OBJECT} ${SUBHEAP_HANDLER_OBJECT} ${ARRAY_HANDLER_OBJECT} ${MESSAGE_HANDLER_OBJECT} ${KEY_HANDLER_OBJECT} ${LOGGER_OBJECT} ${TIMER_OBJECT} ${CLIENT_SERVER_OBJECT} ${AVL_TREE_OBJECT} ${AVL_NODE_HANDER_OBJECT}
 	${COMPILE_TEST} ${TEST_DIR}/NetworkGatewayAPITest.c -o ${BUILD_DIR}/NetworkGatewayAPITest -I${TEST_FRMAWORK_DIR} -I${HEADERS_DIR} -L${BUILD_DIR} -lNetworkGatewayAPI  ${MULTI_THREAD_COMPILE_FLAG}
 	./${BUILD_DIR}/NetworkGatewayAPITest
 	${END_MSG} network_gateway_api

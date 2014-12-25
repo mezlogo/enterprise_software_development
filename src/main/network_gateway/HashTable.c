@@ -22,8 +22,8 @@ LinkedListNode* getLinkedListNode(Key* key) {
 
 
 char insertHashTable(Key* key) {
-    Key* copyKey = (Key*) allocate(sizeof(Key));
     LinkedListNode* newNode = (LinkedListNode*) allocate(sizeof(LinkedListNode));
+    Key* copyKey = (Key*) allocate(sizeof(Key));
 
     if (NULL == copyKey || NULL == newNode)
     { return INSERT_FAIL; }
@@ -79,8 +79,9 @@ char alterHashTable(Key* source, Key* target) {
     }
 
     if (NULL == target) {
-	//removeVar((char*) sourceNode->key);
-	//removeVar((char*) sourceNode);
+	printf("%s", "Remove in hash table\n");
+	removeVar((char*) sourceNode->key);
+	removeVar((char*) sourceNode);
 	return REMOVE_SUCCESS;
     }
 

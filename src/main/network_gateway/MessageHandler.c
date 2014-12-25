@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "Key.h"
 #include "KeyHandler.h"
 #include "Configuration.h"
@@ -39,7 +40,7 @@ char handleMessage(char* message) {
 	    measureTime				= calcOffsetULong(startTime);
 
 	    if (FIND_SUCCESS == collectionStatus)	{ logPrimary(measureTime); }
-	    else 									{ collection.insert(&primaryKey); }
+	    else 									{ printf("%s%08X port: %u\n", "Reciev unknown key ip: ", primaryKey.ip, primaryKey.port); }
 	}
 	break;
 

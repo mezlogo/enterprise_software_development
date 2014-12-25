@@ -56,7 +56,7 @@ void test_find() {
     int nodesCount = 10;
     initMM(nodesCount);
 
-    Key key1 = {0xabcdef01, 0x6981};
+    Key key1 = {0xF81E456B, 39630};
     Key key2 = {0xa0001123, 0x6981};
     Key key3 = {0xabcdef01, 0x0000};
 
@@ -67,7 +67,9 @@ void test_find() {
     assertLongEquals("Shouldn't find", FIND_FAIL, findHashTable(&key3));
     assertLongEquals("Shouldn't find", FIND_FAIL, findHashTable(NULL));
 }
-
+/*
+ * Reciev unknown key ip: F81E456B port: 39630
+ * */
 void test_insert() {
     int nodesCount = 10;
     initMM(nodesCount);
