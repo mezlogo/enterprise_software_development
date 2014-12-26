@@ -6,10 +6,10 @@
 typedef struct AVLNode AVLNode;
 
 struct AVLNode {
-    Key* key;
-    unsigned char height;
-    AVLNode* left;
-    AVLNode* right;
+	Key* key;
+	unsigned char height;
+	AVLNode* left;
+	AVLNode* right;
 } __attribute__((packed));
 
 #endif

@@ -12,24 +12,29 @@ Mutex locka;
 Mutex lockb;
 
 void initMutex(Mutex* mutex) {
-    int result = pthread_mutex_init(mutex, NULL);
-    if (0 != result) { printf("%s%d\n", "Mutex init error: ", result); }
+	int result = pthread_mutex_init(mutex, NULL);
+
+	if (0 != result) { printf("%s%d\n", "Mutex init error: ", result); }
 }
 
 void unlockMutex(Mutex* mutex) {
-    int result = pthread_mutex_unlock(mutex);
-    if (0 != result) { printf("%s%d\n", "Mutex unlock error: ", result); }
+	int result = pthread_mutex_unlock(mutex);
+
+	if (0 != result) { printf("%s%d\n", "Mutex unlock error: ", result); }
 }
 
 void lockMutex(Mutex* mutex) {
-    int result = pthread_mutex_lock(mutex);
-    if (0 != result) { printf("%s%d\n", "Mutex lock error: ", result); }
+	int result = pthread_mutex_lock(mutex);
+
+	if (0 != result) { printf("%s%d\n", "Mutex lock error: ", result); }
 }
 
-void initThread(pthread_t* thread, void* (*method)()) {
-    int err = pthread_create(thread, NULL, method, NULL);
+void initThread(pthread_t* thread,
+				void* (*method)()) {
+	int err = pthread_create(thread, NULL, method,
+							 NULL);
 
-    if (err != 0)	{ printf("%s[%s]\n", "Can't create thread: ", strerror(err)); }
+	if (err != 0)	{ printf("%s[%s]\n", "Can't create thread: ", strerror(err)); }
 }
 
 int (*mainAction)();
@@ -45,54 +50,58 @@ char isCrash = NO_CRASH;
 
 void threadTaskA() {
 
-    while (CRASH != isCrash && seesionCount--) {
+	while (CRASH != isCrash && seesionCount--) {
 
-	preIterationAction();
+		preIterationAction();
 
-	long index = iterationCount;
+		long index = iterationCount;
 
-	while (CRASH != isCrash && index--) {
-	    lockMutex(&lockb);
-	    isCrash = mainAction();
-	    unlockMutex(&locka);
+		while (CRASH != isCrash && index--) {
+			lockMutex(&lockb);
+			isCrash = mainAction();
+			unlockMutex(&locka);
+		}
+
+		postIterationAction();
 	}
-
-	postIterationAction();
-    }
 }
 
 void threadTaskB() {
-    while (CRASH != isCrash ) {
-	lockMutex(&locka);
-	additionalAction();
-	unlockMutex(&lockb);
-    }
+	while (CRASH != isCrash ) {
+		lockMutex(&locka);
+		additionalAction();
+		unlockMutex(&lockb);
+	}
 }
 
-void tasksRun(int (*_mainAction)(), void (*_additionalAction)(), void (*_preIterationAction)(), void (*_postIterationAction)(), long _seesionCount, long _iterationCount) {
-    mainAction = _mainAction;
-    additionalAction = _additionalAction;
+void tasksRun(int (*_mainAction)(),
+			  void (*_additionalAction)(),
+			  void (*_preIterationAction)(),
+			  void (*_postIterationAction)(),
+			  long _seesionCount, long _iterationCount) {
+	mainAction = _mainAction;
+	additionalAction = _additionalAction;
 
-    preIterationAction = _preIterationAction;
-    postIterationAction = _postIterationAction;
+	preIterationAction = _preIterationAction;
+	postIterationAction = _postIterationAction;
 
-    seesionCount = _seesionCount;
-    iterationCount = _iterationCount;
+	seesionCount = _seesionCount;
+	iterationCount = _iterationCount;
 
-    //if variable isCrash contain value CRASH, that's bad.
-    isCrash = NO_CRASH;
+	//if variable isCrash contain value CRASH, that's bad.
+	isCrash = NO_CRASH;
 
-    initMutex(&locka);
-    initMutex(&lockb);
+	initMutex(&locka);
+	initMutex(&lockb);
 
-    lockMutex(&locka);
+	lockMutex(&locka);
 
-    pthread_t threadA;
-    pthread_t threadB;
+	pthread_t threadA;
+	pthread_t threadB;
 
-    initThread(&threadA, (void*) &threadTaskA);
-    initThread(&threadB, (void*) &threadTaskB);
+	initThread(&threadA, (void*) &threadTaskA);
+	initThread(&threadB, (void*) &threadTaskB);
 
-    pthread_join(threadA, NULL);
-    pthread_join(threadB, NULL);
+	pthread_join(threadA, NULL);
+	pthread_join(threadB, NULL);
 }

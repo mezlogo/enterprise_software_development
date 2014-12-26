@@ -10,9 +10,10 @@ unsigned int size = TRANSMITTERS_COUNT;
 
 Key* getTransmitters() { return transmitters; }
 
-void setTransmitters(Key* newTransmitters, unsigned int newSize) {
-    transmitters = newTransmitters;
-    size = newSize;
+void setTransmitters(Key* newTransmitters,
+					 unsigned int newSize) {
+	transmitters = newTransmitters;
+	size = newSize;
 }
 
 /* Сгенерировать сообщение (на клиенте)
@@ -22,20 +23,23 @@ void setTransmitters(Key* newTransmitters, unsigned int newSize) {
  * 4) если входной параметр (итерация) 50-ая, то изменить данные передатчика
  *		и записать измененые данные в сообщение
  * */
-void generateMessage(char* message, unsigned long value) {
-    message[0] = MESSAGE_TYPE_REGULAR;
+void generateMessage(char* message,
+					 unsigned long value) {
+	message[0] = MESSAGE_TYPE_REGULAR;
 
-    Key* currentKey = &transmitters[generateIntByWidth(size)];
+	Key* currentKey =
+		&transmitters[generateIntByWidth(size)];
 
-    keyToCharArray(currentKey, &message[1]);
+	keyToCharArray(currentKey, &message[1]);
 
-    if (0 == value % TRANSMITTER_ALTER_THRESHOLD_VALUE) {
-	message[0] = MESSAGE_TYPE_ALTER;
-	generateUniqKey(currentKey, transmitters, size);
-	keyToCharArray(currentKey, &message[7]);
-    }
+	if (0 == value %
+			TRANSMITTER_ALTER_THRESHOLD_VALUE) {
+		message[0] = MESSAGE_TYPE_ALTER;
+		generateUniqKey(currentKey, transmitters, size);
+		keyToCharArray(currentKey, &message[7]);
+	}
 }
 
 void initTransmitters() {
-    generateUniqKeys(transmitters, size);
+	generateUniqKeys(transmitters, size);
 }

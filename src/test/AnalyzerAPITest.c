@@ -1,6 +1,6 @@
 #include "AnalyzerAPI.h"
 
 int main(int argc, char** argv) {
-    start();
-    return 0;
+	start();
+	return 0;
 }

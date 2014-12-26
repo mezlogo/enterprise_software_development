@@ -13,100 +13,114 @@ int hashTableSize;
 int getIndexByHashKey(Key* key) { return hashCode(key) % hashTableSize; }
 
 LinkedListNode* getLinkedListNode(Key* key) {
-    int hashTableIndex =  getIndexByHashKey(key);
+	int hashTableIndex = getIndexByHashKey(key);
 
-    LinkedListNode* root = hashTable[hashTableIndex];
+	LinkedListNode* root = hashTable[hashTableIndex];
 
-    return findLinkedListNodeByKey(root, key);
+	return findLinkedListNodeByKey(root, key);
 }
 
 
 char insertHashTable(Key* key) {
-    LinkedListNode* newNode = (LinkedListNode*) allocate(sizeof(LinkedListNode));
-    Key* copyKey = (Key*) allocate(sizeof(Key));
+	LinkedListNode* newNode = (LinkedListNode*) allocate(sizeof(LinkedListNode));
+	Key* copyKey = (Key*) allocate(sizeof(Key));
 
-    if (NULL == copyKey || NULL == newNode)
-    { return INSERT_FAIL; }
+	if (NULL == copyKey || NULL == newNode)
+	{ return INSERT_FAIL; }
 
-    copyKey->port	= key->port;
-    copyKey->ip 	= key->ip;
-    newNode->key 	= copyKey;
+	copyKey->port	= key->port;
+	copyKey->ip 	= key->ip;
+	newNode->key 	= copyKey;
 
-    int hashTableIndex = hashCode(copyKey) % hashTableSize;
+	int hashTableIndex = getIndexByHashKey(copyKey);
 
-    LinkedListNode* oldRoot = hashTable[hashTableIndex];
+	LinkedListNode* oldRoot = hashTable[hashTableIndex];
 
-    hashTable[hashTableIndex] = newNode;
-    newNode->next = oldRoot;
+	hashTable[hashTableIndex] = newNode;
+	newNode->next = oldRoot;
 
 
-    return INSERT_SUCCESS;
+	return INSERT_SUCCESS;
 }
 
 char findHashTable(Key* key) {
-    if (NULL == key) { return FIND_FAIL; }
+	if (NULL == key) { return FIND_FAIL; }
 
-    LinkedListNode* result = getLinkedListNode(key);
+	LinkedListNode* result = getLinkedListNode(key);
 
-    return NULL == result ? FIND_FAIL : FIND_SUCCESS;
+	return NULL == result ? FIND_FAIL : FIND_SUCCESS;
 }
 
+/*_____________________________
+ * 	    Input      | Result   |
+ * source | target |	      |
+ * _______|________|__________|
+ * found  | !null  | alt_suc  |
+ * found  |  null  | rm_suc   |
+ * null   |   *    | alt_fail |
+ * !found |   *    | alt_fail |
+ *____________________________|
+ */
 char alterHashTable(Key* source, Key* target) {
-    if (NULL == source)
-    { return ALTER_FAIL; }
+	LinkedListNode* sourceNode;
 
-    LinkedListNode* sourceNode = getLinkedListNode(source);
+	if (NULL == source || NULL == (sourceNode = getLinkedListNode(source))) {
+		return ALTER_FAIL;
+	}
 
-    if (NULL == sourceNode)
-    { return ALTER_FAIL; }
+	int hashTableIndex = getIndexByHashKey(source);
+	LinkedListNode* root = hashTable[hashTableIndex];
 
-    int hashTableIndex = hashCode(source) % hashTableSize;
+	char removeStatus = removeLinkedListNode(root, sourceNode);
 
-    LinkedListNode* root = hashTable[hashTableIndex];
+	switch (removeStatus) {
+	case LINKED_LIST_CANT_REMOVE_ROOT:
+		hashTable[hashTableIndex] = sourceNode->next;
+		break;
 
-    char removeStatus = removeLinkedListNode(root, sourceNode);
+	case LINKED_LIST_NODE_NOT_FOUND:
+		printf("%s", "Key and node not found!\n");
+		return ALTER_FAIL;
+		break;
 
-    switch (removeStatus)  {
-    case LINKED_LIST_NODE_ROOT_IS_CANT_BE_REMOVED:
-	hashTable[hashTableIndex] = root->next;
-	break;
-    case LINKED_LIST_NODE_NOT_FOUND:
-	printf("%s", "Key and node not found!\n");
-	return ALTER_FAIL;
-	break;
-    default:
-	break;
-    }
+	default:
+		break;
+	}
 
-    if (NULL == target) {
-	printf("%s", "Remove in hash table\n");
-	removeVar((char*) sourceNode->key);
-	removeVar((char*) sourceNode);
-	return REMOVE_SUCCESS;
-    }
+	if (NULL == target) {
+		printf("%s", "Remove in hash table\n");
+		removeVar((char*) sourceNode->key);
+		removeVar((char*) sourceNode);
+		return REMOVE_SUCCESS;
+	}
 
-    sourceNode->key				= target;
-    hashTableIndex				= hashCode(target) % hashTableSize;
-    root						= hashTable[hashTableIndex];
-    hashTable[hashTableIndex]	= sourceNode;
-    sourceNode->next 			= root;
+	Key* keyContainInSource 	= sourceNode->key;
+	keyContainInSource->ip		= target->ip;
+	keyContainInSource->port	= target->port;
+	hashTableIndex				= getIndexByHashKey(target);
+	root						= hashTable[hashTableIndex];
+	hashTable[hashTableIndex]	= sourceNode;
+	sourceNode->next 			= root;
 
-    return ALTER_SUCCESS;
+	return ALTER_SUCCESS;
 }
 
 char initHashTable(int size) {
-    int variablesSize[3] = {sizeof(Key), sizeof(LinkedListNode), size * sizeof(LinkedListNode*)};
-    int variablesCount[3] = {size, size, 1};
-    char subheapCount = 3;
+	int variablesSize[3] = {sizeof(Key), sizeof(LinkedListNode), size * sizeof(LinkedListNode*)};
+	int variablesCount[3] = {size, size, 1};
+	char subheapCount = 3;
 
-    if (INITIAL_SUCCESS != init(variablesSize, variablesCount, subheapCount)) {
-	printf("%s", "Memory manager can't init\n");
-	exit(-1);
-    }
+	if (INITIAL_SUCCESS != init(variablesSize,
+								variablesCount, subheapCount)) {
+		printf("%s", "Memory manager can't init\n");
+		exit(-1);
+	}
 
-    hashTableSize = size;
-    hashTable = (LinkedListNode**) allocate(size * sizeof(LinkedListNode*));
+	hashTableSize = size;
+	hashTable = (LinkedListNode**) allocate(
+					size * sizeof(LinkedListNode*));
 
 
-    return (NULL == hashTable) ? HASH_TABLE_INIT_FAIL : HASH_TABLE_INIT_SUCCESS;
+	return (NULL == hashTable) ?
+		   HASH_TABLE_INIT_FAIL : HASH_TABLE_INIT_SUCCESS;
 }

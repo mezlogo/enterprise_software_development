@@ -8,13 +8,13 @@ long getIndex = 0;
 char* list[MAX_VARIABLES_COUNT];
 
 void put(char* variable) {
-    validation(putIndex);
+	validation(putIndex);
 
-    list[putIndex] = variable;
+	list[putIndex] = variable;
 }
 
 char* next() {
-    validation(getIndex);
+	validation(getIndex);
 
-    return list[getIndex];
+	return list[getIndex];
 }

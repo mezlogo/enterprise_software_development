@@ -6,8 +6,8 @@
 typedef struct LinkedListNode LinkedListNode;
 
 struct LinkedListNode {
-    Key* key;
-    LinkedListNode* next;
+	Key* key;
+	LinkedListNode* next;
 } __attribute__((packed));
 
 #endif

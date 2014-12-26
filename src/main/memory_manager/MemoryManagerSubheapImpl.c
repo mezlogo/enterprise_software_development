@@ -27,34 +27,42 @@ char* lastByte;
  * 4) Возвратить (размер переменных найденой подкучи) * (индекс свободной переменной) + указатель на кучу найденой подкучи
  * */
 char* allocate(int size) {
-    if (size <= 0 || maxVariablesSize < size) {
+	if (size <= 0 || maxVariablesSize < size) {
 //		printf("No subheaps found, that can contain varables size: %d\n", size);
-	return NULL;
-    }
-
-    int subheapIndex = findHeapIndexBySize(subheaps, currentSubheapCount, size);
-    int allocateVariableIndex = -1;
-    Subheap* currentSubheap;
-
-    for (; subheapIndex <= currentSubheapCount; subheapIndex++) {
-	currentSubheap = &subheaps[subheapIndex];
-	allocateVariableIndex = findFirstZero(currentSubheap->variables, currentSubheap->variablesCount);
-	if (0 <= allocateVariableIndex) {
-	    currentSubheap->variables[allocateVariableIndex] = 1;
-	    break;
+		return NULL;
 	}
-    }
 
-    if (allocateVariableIndex == -1) {
+	int subheapIndex = findHeapIndexBySize(subheaps,
+										   currentSubheapCount, size);
+	int allocateVariableIndex = -1;
+	Subheap* currentSubheap;
+
+	for (; subheapIndex <= currentSubheapCount;
+			subheapIndex++) {
+		currentSubheap = &subheaps[subheapIndex];
+		allocateVariableIndex = findFirstZero(
+									currentSubheap->variables,
+									currentSubheap->variablesCount);
+
+		if (0 <= allocateVariableIndex) {
+			currentSubheap->variables[allocateVariableIndex] =
+				1;
+			break;
+		}
+	}
+
+	if (allocateVariableIndex == -1) {
 //		printf("No free variables, that can contain varables size: %d\n", size);
-	return NULL;
-    }
+		return NULL;
+	}
 
-    char* result = currentSubheap->heap + currentSubheap->variablesSize * allocateVariableIndex;
+	char* result = currentSubheap->heap +
+				   currentSubheap->variablesSize *
+				   allocateVariableIndex;
 
-    resetAllChars(result, size);
+	resetAllChars(result, size);
 
-    return result;
+	return result;
 }
 
 /*Освобождение памяти
@@ -67,15 +75,18 @@ char* allocate(int size) {
  * 3) Освободить переменную с вычисленным индексом
  * */
 int removeVar(char* variable) {
-    if (variable < heap || lastByte < variable) { return VARIABLE_REMOVE_FAIL; }
+	if (variable < heap || lastByte < variable) { return VARIABLE_REMOVE_FAIL; }
 
-    int subheapIndex = findHeapIndexByPointer(subheaps, currentSubheapCount, variable);
+	int subheapIndex = findHeapIndexByPointer(
+						   subheaps, currentSubheapCount, variable);
 
-    Subheap* targetSubheap = &subheaps[subheapIndex];
+	Subheap* targetSubheap = &subheaps[subheapIndex];
 
-    targetSubheap->variables[((int)(variable - targetSubheap->heap)) / targetSubheap->variablesSize] = 0;
+	targetSubheap->variables[((int)(variable -
+									targetSubheap->heap)) /
+							 targetSubheap->variablesSize] = 0;
 
-    return VARIABLE_REMOVE_SUCCESS;
+	return VARIABLE_REMOVE_SUCCESS;
 }
 
 /*Инициализация
@@ -93,56 +104,65 @@ int removeVar(char* variable) {
  * 	-	Указатель на последний байт последней кучи
  * 	-	Максимальный размер хранимых переменных
  * */
-int init(int* variablesSize, int* variablesCount, char subheapCount) {
-    //Валидация: количества подкучь, положительные значения в массивах и размеры по возростанию
-    if (subheapCount <= 0 ||
-	MAX_HEAPS_COUNT < subheapCount ||
-	ONLY_ACSENDING != isAscending(variablesSize, subheapCount) ||
-	ONLY_POSITIVES != isOnlyPositive(variablesSize, subheapCount) ||
-	ONLY_POSITIVES != isOnlyPositive(variablesCount, subheapCount))
-    { return INITIAL_INPUT_PARAMS_ERROR; }
+int init(int* variablesSize, int* variablesCount,
+		 char subheapCount) {
+	//Валидация: количества подкучь, положительные значения в массивах и размеры по возростанию
+	if (subheapCount <= 0 ||
+			MAX_HEAPS_COUNT < subheapCount ||
+			ONLY_ACSENDING != isAscending(variablesSize,
+										  subheapCount) ||
+			ONLY_POSITIVES != isOnlyPositive(variablesSize,
+					subheapCount) ||
+			ONLY_POSITIVES != isOnlyPositive(variablesCount,
+					subheapCount))
+	{ return INITIAL_INPUT_PARAMS_ERROR; }
 
-    //Вычисляем сколько требуется байт в куче и сколько переменных можем хранить
-    long sumOfMul = sumOfMulOfTwoArray(variablesSize, variablesCount, subheapCount);
-    int sumOfArrayVarriables = sumOfArray(variablesCount, subheapCount);
+	//Вычисляем сколько требуется байт в куче и сколько переменных можем хранить
+	long sumOfMul = sumOfMulOfTwoArray(variablesSize,
+									   variablesCount, subheapCount);
+	int sumOfArrayVarriables = sumOfArray(
+								   variablesCount, subheapCount);
 
-    //Валидация: поместится ли в выделенную кучю и переменные
-    if (MAX_HEAP_SIZE < sumOfMul ||
-	MAX_VARIABLES_COUNT < sumOfArrayVarriables)
-    { return INITIAL_ERROR_MANAGER_TOO_SMALL; }
+	//Валидация: поместится ли в выделенную кучю и переменные
+	if (MAX_HEAP_SIZE < sumOfMul ||
+			MAX_VARIABLES_COUNT < sumOfArrayVarriables)
+	{ return INITIAL_ERROR_MANAGER_TOO_SMALL; }
 
-    //Валидация пройдена успешна, запоминаем количество подкуч
-    currentSubheapCount = subheapCount;
+	//Валидация пройдена успешна, запоминаем количество подкуч
+	currentSubheapCount = subheapCount;
 
-    //Заполняем для каждой подкучи необходимые данные
-    long heapOffset = initSubheaps(subheaps, subheapCount, variables, heap, variablesSize, variablesCount);
+	//Заполняем для каждой подкучи необходимые данные
+	long heapOffset = initSubheaps(subheaps,
+								   subheapCount, variables, heap, variablesSize,
+								   variablesCount);
 
-    //Сбрасываем занятые переменные
-    resetAllChars(variables, sumOfArrayVarriables);
+	//Сбрасываем занятые переменные
+	resetAllChars(variables, sumOfArrayVarriables);
 
-    //Кэшируем максимальный размер и адрес последнего байта
-    maxVariablesSize = subheaps[currentSubheapCount - 1].variablesSize;
-    lastByte = heap + heapOffset - 1;
+	//Кэшируем максимальный размер и адрес последнего байта
+	maxVariablesSize = subheaps[currentSubheapCount -
+								1].variablesSize;
+	lastByte = heap + heapOffset - 1;
 
-    return INITIAL_SUCCESS;
+	return INITIAL_SUCCESS;
 }
 
 Subheap* getSubheaps() {
-    return subheaps;
+	return subheaps;
 }
 
 char getSubheapCount() {
-    return currentSubheapCount;
+	return currentSubheapCount;
 }
 
 char* getLastByte() {
-    return lastByte;
+	return lastByte;
 }
 
 char* getHeap() {
-    return heap;
+	return heap;
 }
 
 char* getVariables() {
-    return variables;
+	return variables;
 }

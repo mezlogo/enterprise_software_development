@@ -55,7 +55,7 @@ memory_manager_analyzer: compile_and_test_analyzer
 
 network_gateway_api: compile_and_test_network_gateway_api
 
-without_time: compile_and_test_memory_manager compile_and_test_cyclic_list compile_and_test_multi_thread_task_runner compile_and_test_logger compile_and_test_client_server compile_and_test_message_handler compile_and_test_hash_table
+without_time: compile_and_test_memory_manager compile_and_test_cyclic_list compile_and_test_multi_thread_task_runner compile_and_test_logger compile_and_test_client_server  compile_and_test_hash_table compile_and_test_avl_tree
 
 integrate: compile_and_test_memory_manager compile_and_test_size_generator compile_and_test_cyclic_list compile_and_test_single_thread_task_runner compile_and_test_logger compile_and_test_analyzer compile_and_test_client_server compile_and_test_message_handler
 
@@ -67,8 +67,8 @@ check: make_build_dir
 	./cppcheck -q --enable=style,performance,warning -I${HEADERS_DIR} --template='{severity}\t{id} {file}:{line} {message}' ${MAIN_DIR} 2> ${BUILD_DIR}/suppress-log.txt
 	
 form:
-	astyle -H -k1 -J -O -xL -W -p -m0 -M -xW -xT -xG -K -A2 -r -n src/*.c src/*.h
-
+	astyle -H -k1 -J  -xC100   -p -F -xW -T -K -A2 -r -n src/*.c src/*.h
+#-O -W -m0 -M -xG -xL
 make_build_dir: clean
 	${CREATE_DIRS} ${BUILD_DIR}
 

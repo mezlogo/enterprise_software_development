@@ -4,4 +4,5 @@ unsigned int getUIntNano();
 
 unsigned char getUCharNano();
 
-unsigned long calcOffsetULong(unsigned long start);
+unsigned long calcOffsetULong(unsigned long
+							  start);
