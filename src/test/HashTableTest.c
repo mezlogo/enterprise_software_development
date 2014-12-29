@@ -185,8 +185,8 @@ void test_find() {
 }
 
 void test_insert() {
-	int nodesCount = 10;
-	initMM(nodesCount);
+	int nodesCount = TRANSMITTERS_COUNT;
+	initMM(TRANSMITTERS_COUNT);
 
 	Key key = {0xabcdef01, 0x6981};
 

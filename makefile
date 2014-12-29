@@ -11,7 +11,7 @@ NETWORK_GATEWAY_DIR = ${MAIN_DIR}/network_gateway
 TEST_FRMAWORK_DIR = lib
 
 COMPILE = gcc
-CFLAGS = -g -Wall
+CFLAGS = -O3 -Wall
 COMPILE_SOURCE = ${COMPILE} ${CFLAGS} -c
 COMPILE_TEST = ${COMPILE} ${CFLAGS} -DEBUG
 COMPILE_DEBUG = ${COMPILE} ${CFLAGS} -DEBUG -v -da -Q
@@ -51,7 +51,7 @@ HASH_TABLE_OBJECT = ${BUILD_DIR}/HashTable.o
 START_MSG = @echo "<--------Start compile and testing"
 END_MSG = @echo "<--------End compile and testing"
 
-all: compile_and_test_network_gateway_api
+all: compile_and_test_analyzer compile_and_test_network_gateway_api
 
 memory_manager_analyzer: compile_and_test_analyzer
 
