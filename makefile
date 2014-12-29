@@ -43,21 +43,23 @@ NETWORK_GATEWAY_API_OBJECT = ${BUILD_DIR}/NetworkGatewayAPI.o
 
 LINKED_LIST_HANDER_OBJECT = ${BUILD_DIR}/LinkedListHandler.o
 AVL_NODE_HANDER_OBJECT = ${BUILD_DIR}/AVLNodeHandler.o
+B_NODE_HANDER_OBJECT = ${BUILD_DIR}/BNodeHandler.o
 AVL_TREE_OBJECT = ${BUILD_DIR}/AVLTree.o
+B_TREE_OBJECT = ${BUILD_DIR}/BTree.o
 HASH_TABLE_OBJECT = ${BUILD_DIR}/HashTable.o
 
 START_MSG = @echo "<--------Start compile and testing"
 END_MSG = @echo "<--------End compile and testing"
 
-all: compile_and_test_network_gateway_api
+all: compile_and_test_b_node_handler
 
 memory_manager_analyzer: compile_and_test_analyzer
 
 network_gateway_api: compile_and_test_network_gateway_api
 
-without_time: compile_and_test_memory_manager compile_and_test_cyclic_list compile_and_test_multi_thread_task_runner compile_and_test_logger compile_and_test_client_server  compile_and_test_hash_table compile_and_test_avl_tree
+without_time: compile_and_test_memory_manager compile_and_test_cyclic_list compile_and_test_multi_thread_task_runner compile_and_test_logger compile_and_test_client_server  compile_and_test_hash_table compile_and_test_avl_tree compile_and_test_b_tree
 
-integrate: compile_and_test_memory_manager compile_and_test_size_generator compile_and_test_cyclic_list compile_and_test_single_thread_task_runner compile_and_test_logger compile_and_test_analyzer compile_and_test_client_server compile_and_test_message_handler
+integrate: compile_and_test_memory_manager compile_and_test_size_generator compile_and_test_cyclic_list compile_and_test_single_thread_task_runner compile_and_test_logger compile_and_test_analyzer compile_and_test_client_server compile_and_test_message_handler compile_and_test_b_tree
 
 clean:
 	${RECURSIVE_REMOVE} ${BUILD_DIR}
@@ -191,6 +193,22 @@ compile_and_test_hash_table: compile_and_test_linked_list_handler compile_and_te
 	${COMPILE_TEST} ${TEST_DIR}/HashTableTest.c -o ${BUILD_DIR}/HashTableTest -I${TEST_FRMAWORK_DIR} -I${HEADERS_DIR} -L${BUILD_DIR} -lHashTable
 	./${BUILD_DIR}/HashTableTest
 	${END_MSG} hash_table
+
+compile_and_test_b_node_handler: compile_and_test_key_handler
+	${START_MSG} b_node_handler
+	${COMPILE_SOURCE} ${NETWORK_GATEWAY_DIR}/BNodeHandler.c -o ${B_NODE_HANDER_OBJECT} -I${HEADERS_DIR}	
+	${ARCHIVE} ${BUILD_DIR}/libBNodeHandler.a ${B_NODE_HANDER_OBJECT} ${KEY_HANDLER_OBJECT}
+	${COMPILE_TEST} ${TEST_DIR}/BNodeHandlerTest.c -o ${BUILD_DIR}/BNodeHandlerTest -I${TEST_FRMAWORK_DIR} -I${HEADERS_DIR} -L${BUILD_DIR} -lBNodeHandler
+	./${BUILD_DIR}/BNodeHandlerTest
+	${END_MSG} b_node_handler	
+
+compile_and_test_b_tree: compile_and_test_key_handler compile_and_test_memory_manager compile_and_test_b_node_handler
+	${START_MSG} b_tree
+	${COMPILE_SOURCE} ${NETWORK_GATEWAY_DIR}/BTree.c -o ${B_TREE_OBJECT} -I${HEADERS_DIR}	
+	${ARCHIVE} ${BUILD_DIR}/libBTree.a ${B_TREE_OBJECT} ${B_NODE_HANDER_OBJECT} ${KEY_HANDLER_OBJECT}  ${MEMORY_MANAGER_OBJECT} ${SUBHEAP_HANDLER_OBJECT} ${ARRAY_HANDLER_OBJECT}
+	${COMPILE_TEST} ${TEST_DIR}/BTreeTest.c -o ${BUILD_DIR}/BTreeTest -I${TEST_FRMAWORK_DIR} -I${HEADERS_DIR} -L${BUILD_DIR} -lBTree
+	./${BUILD_DIR}/BTreeTest
+	${END_MSG} b_tree	
 
 compile_and_test_avl_node_handler: compile_and_test_key_handler
 	${START_MSG} avl_node_handler

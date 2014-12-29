@@ -83,8 +83,7 @@ AVLNode* removeMin(AVLNode* root) {
 	return balance(root);
 }
 
-AVLNode* removeAVLNode(AVLNode* root, Key* key,
-					   void (*deleteOp)(AVLNode*)) {
+AVLNode* removeAVLNode(AVLNode* root, Key* key, void (*deleteOp)(AVLNode*)) {
 	if (NULL == root) { return NULL; }
 
 	if (NULL == key) { return root; }

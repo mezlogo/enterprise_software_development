@@ -28,7 +28,7 @@ const char* failFuncName;
 char* fileName;
 char* errorMsg = "No errors";
 char errorCount = 0;
-char lineNumber;
+int lineNumber;
 char isTestPass = TEST_NOT_FAIL;
 
 

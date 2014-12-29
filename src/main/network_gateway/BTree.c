@@ -2,21 +2,21 @@
 #include <stdio.h>
 
 #include "Key.h"
-#include "AVLNode.h"
+#include "BNode.h"
 #include "KeyHandler.h"
 #include "MemoryManagerSubheap.h"
-#include "AVLNodeHandler.h"
+#include "BNodeHandler.h"
 #include "Configuration.h"
 
-AVLNode* root;
 
-char insertAVLTree(Key* key) {
+BNode* root;
+
+char insertBTree(Key* key) {
 	if (NULL == key)
 	{ return INSERT_FAIL; }
 
 	Key* copyKey = (Key*) allocate(sizeof(Key));
-	AVLNode* newNode = (AVLNode*) allocate(sizeof(
-			AVLNode));
+	BNode* newNode = (BNode*) allocate(sizeof(BNode));
 
 	if (NULL == copyKey || NULL == newNode)
 	{ return INSERT_FAIL; }
@@ -25,39 +25,55 @@ char insertAVLTree(Key* key) {
 	copyKey->ip 	= key->ip;
 	newNode->key 	= copyKey;
 
-	root = insertAVLByNode(root, newNode);
+	if (NULL == root) {
+		root = newNode;
+
+	} else {
+		char result = insertBNodeInsideRoot(root, newNode);
+
+		if (TREE_INSERT_OK != result) {
+			printf("%s", "B tree insert error\n");
+			removeVar((char*) copyKey);
+			removeVar((char*) newNode);
+			return INSERT_FAIL;
+		}
+	}
 
 	return INSERT_SUCCESS;
 }
 
-char findAVLTree(Key* key) {
+char findBTree(Key* key) {
 	if (NULL == key) { return FIND_FAIL; }
 
-	AVLNode* result = findAVLNode(root, key);
+	BNode* result = findBNodeInsideRoot(root, key);
 
 	return NULL == result ? FIND_FAIL : FIND_SUCCESS;
 }
 
-char alterAVLTree(Key* source, Key* target) {
+char alterBTree(Key* source, Key* target) {
 	if (NULL == source || NULL == root)
 	{ return ALTER_FAIL; }
 
-	void deleteOp(AVLNode * toDelete) {
+	void deleteOp(BNode * toDelete) {
 		removeVar((char*) toDelete->key);
 		removeVar((char*) toDelete);
 	}
 
-	root = removeAVLNode(root, source, &deleteOp);
 
-	if (NULL == target) { return REMOVE_SUCCESS; }
+	char result = deleteBNodeFromRoot(root, source, &deleteOp);
 
-	char insertResult = insertAVLTree(target);
+	if (NULL == target) {
+		return REMOVE_SUCCESS;
+	}
+
+	char insertResult = insertBTree(target);
 	return INSERT_SUCCESS == insertResult ? ALTER_SUCCESS : ALTER_FAIL;
 }
 
-char initAVLTree(int size) {
+
+char initBTree(int size) {
 	root = NULL;
-	int variablesSize[2] = {sizeof(Key), sizeof(AVLNode)};
+	int variablesSize[2] = {sizeof(Key), sizeof(BNode)};
 	int variablesCount[2] = {size, size};
 	char subheapCount = 2;
 
