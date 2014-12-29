@@ -102,24 +102,26 @@ void startAnalyzer() {
 	closeServer();
 }
 
-void startForCollection(char (*find)(Key* key), char (*insert)(Key* key), char (*alter)(Key* source, Key* target), char (*initCollection)(int size), char* collectionName) {
+void startForCollection(char (*find)(Key* key), char (*insert)(Key* key), char (*alter)(Key* source,
+						Key* target), char (*initCollection)(int size), char* collectionName) {
 	Collection collection = {find, insert, alter, initCollection};
-	
+
 	if (HASH_TABLE_INIT_FAIL == collection.initCollection(TRANSMITTERS_COUNT)) { printf("%s", "Can't init collection\n"); exit(-1);}
-	
-	
+
+
 	printf("%s", "<<<<Reinit block>>>>\n");
 	reset();
 	initTransmitters();
 
 	Key* transmitters = getTransmitters();
 	int index = 0;
+
 	for (; index < TRANSMITTERS_COUNT; index++) {
 		if (INSERT_FAIL == collection.insert(&transmitters[index])) { printf("%s", "\nInit insert error!\n"); }
 	}
 
 	initClientServer(2500);
-	
+
 	initMessageHandlerCollection(&collection);
 
 	startAnalyzer();
@@ -131,7 +133,7 @@ void start() {
 
 	printf("%s", "\n<<<<<HASH TABLE>>>>>\n");
 	startForCollection(&findHashTable, &insertHashTable, &alterHashTable, &initHashTable, "Hash");
-	
+
 	printf("%s", "\n<<<<<AVL TREE>>>>>\n");
 	startForCollection(&findAVLTree, &insertAVLTree, &alterAVLTree, &initAVLTree, "AVL");
 

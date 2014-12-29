@@ -57,8 +57,7 @@ AVLNode* balance(AVLNode* root) {
 	return root;
 }
 
-AVLNode* insertAVLByNode(AVLNode* root,
-						 AVLNode* target) {
+AVLNode* insertAVLByNode(AVLNode* root, AVLNode* target) {
 	if (NULL == root) { return target; }
 
 	if (1 == compareKeys(root->key, target->key))

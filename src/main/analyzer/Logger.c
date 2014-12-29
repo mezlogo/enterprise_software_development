@@ -16,11 +16,13 @@ void reset() {
 
 void logPrimary(unsigned long time) {
 	if (LOGGER_SIZE < primaryIndex) { printf("%s", "Primary logger is out of range!\n"); return; }
+
 	primaryMeasuring[primaryIndex++] = time;
 }
 
 void logSecondary(unsigned long time) {
 	if (LOGGER_SIZE < secondaryIndex) { printf("%s", "Secondary logger is out of range!\n"); return; }
+
 	secondaryMeasuring[secondaryIndex++] = time;
 }
 

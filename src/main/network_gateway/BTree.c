@@ -54,19 +54,26 @@ char alterBTree(Key* source, Key* target) {
 	if (NULL == source || NULL == root)
 	{ return ALTER_FAIL; }
 
+	BNode* srcNode;
 	void deleteOp(BNode * toDelete) {
-		removeVar((char*) toDelete->key);
-		removeVar((char*) toDelete);
+		srcNode = toDelete;
 	}
 	char removeStatus;
 	root = deleteBNodeFromRoot(root, source, &deleteOp, &removeStatus);
 
 	if (NULL == target) {
+		removeVar((char*) srcNode->key);
+		removeVar((char*) srcNode);
 		return REMOVE_SUCCESS;
 	}
 
-	char insertResult = insertBTree(target);
-	return INSERT_SUCCESS == insertResult ? ALTER_SUCCESS : ALTER_FAIL;
+	srcNode->key->ip = target->ip;
+	srcNode->key->port = target->port;
+	srcNode->left = NULL;
+	srcNode->right = NULL;
+
+	char insertResult = insertBNodeInsideRoot(root, srcNode);
+	return TREE_INSERT_OK == insertResult ? ALTER_SUCCESS : ALTER_FAIL;
 }
 
 
