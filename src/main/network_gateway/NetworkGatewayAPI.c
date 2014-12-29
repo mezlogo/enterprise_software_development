@@ -16,10 +16,8 @@
 #include "Collection.h"
 #include "MessageHandler.h"
 
-void initThread(pthread_t* thread,
-				void* (*method)()) {
-	int err = pthread_create(thread, NULL, method,
-							 NULL);
+void initThread(pthread_t* thread, void* (*method)()) {
+	int err = pthread_create(thread, NULL, method, NULL);
 
 	if (err != 0)	{ printf("%s[%s]\n", "Can't create thread: ", strerror(err)); }
 }
@@ -47,28 +45,6 @@ void initClientServer(int port) {
 		   "Client and server start on port: ", port);
 
 }
-
-void initBlock(Collection* collection) {
-	printf("%s", "<<<<Reinit block>>>>\n");
-	reset();
-	initTransmitters();
-
-	Key* transmitters = getTransmitters();
-
-	int index = 0;
-
-	Key* currentTransmitter;
-
-	for (; index < TRANSMITTERS_COUNT; index++) {
-		if (INSERT_FAIL == collection->insert(currentTransmitter = &transmitters[index]))
-		{ printf("%s", "\nInit insert error!\n"); }
-
-		else {printf("%s%08x port: %04x\n", "Init ip: ", currentTransmitter->ip, currentTransmitter->port);}
-	}
-
-	initClientServer(2500);
-}
-
 
 #define SENDER_IS_DONE 1
 #define SENDER_ISNT_DONE -1
@@ -126,36 +102,39 @@ void startAnalyzer() {
 	closeServer();
 }
 
-void startForCollection(Collection* collection) {
-	collection->initCollection(TRANSMITTERS_COUNT);
-	initBlock(collection);
-	initCollection(collection);
+void startForCollection(char (*find)(Key* key), char (*insert)(Key* key), char (*alter)(Key* source, Key* target), char (*initCollection)(int size), char* collectionName) {
+	Collection collection = {find, insert, alter, initCollection};
+	
+	if (HASH_TABLE_INIT_FAIL == collection.initCollection(TRANSMITTERS_COUNT)) { printf("%s", "Can't init collection\n"); exit(-1);}
+	
+	
+	printf("%s", "<<<<Reinit block>>>>\n");
+	reset();
+	initTransmitters();
+
+	Key* transmitters = getTransmitters();
+	int index = 0;
+	for (; index < TRANSMITTERS_COUNT; index++) {
+		if (INSERT_FAIL == collection.insert(&transmitters[index])) { printf("%s", "\nInit insert error!\n"); }
+	}
+
+	initClientServer(2500);
+	
+	initMessageHandlerCollection(&collection);
 
 	startAnalyzer();
-	show();
+	show(collectionName);
 }
 
 void start() {
-	Collection collection = {};
+	setFileLoggerOutput();
 
-	printf("%s", "\n\n<<<<<HASH TABLE>>>>>\n\n");
-	collection.insert = &insertHashTable;
-	collection.find = &findHashTable;
-	collection.alter = &alterHashTable;
-	collection.initCollection = &initHashTable;
-	startForCollection(&collection);
-
-	printf("%s", "\n\n<<<<<AVL TREE>>>>>\n\n");
-	collection.insert = &insertAVLTree;
-	collection.find = &findAVLTree;
-	collection.alter = &alterAVLTree;
-	collection.initCollection = &initAVLTree;
-	startForCollection(&collection);
+	printf("%s", "\n<<<<<HASH TABLE>>>>>\n");
+	startForCollection(&findHashTable, &insertHashTable, &alterHashTable, &initHashTable, "Hash");
 	
-	printf("%s", "\n\n<<<<<B TREE>>>>>\n\n");
-	collection.insert = &insertBTree;
-	collection.find = &findBTree;
-	collection.alter = &alterBTree;
-	collection.initCollection = &initBTree;
-	startForCollection(&collection);
+	printf("%s", "\n<<<<<AVL TREE>>>>>\n");
+	startForCollection(&findAVLTree, &insertAVLTree, &alterAVLTree, &initAVLTree, "AVL");
+
+	printf("%s", "\n<<<<<B TREE>>>>>\n");
+	startForCollection(&findBTree, &insertBTree, &alterBTree, &initBTree, "BI");
 }

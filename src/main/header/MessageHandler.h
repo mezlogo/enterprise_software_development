@@ -9,4 +9,4 @@ void getSecondKey(Key* key, char* message);
 
 char handleMessage(char* message);
 
-void initCollection(Collection* _collection);
+void initMessageHandlerCollection(Collection* _collection);

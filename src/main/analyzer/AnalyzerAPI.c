@@ -52,13 +52,15 @@ void preIteration() {
 	reset();
 }
 
+char* analysisName;
+
 void postIteration() {
-	show();
+	show(analysisName);
 }
 
 void startAnalyze(int (*generateMethod)(),
 				  char* msg) {
-	printf("%s", msg);
+	analysisName = msg;
 
 	int variablesSize[] = ANALYZE_VARIABLES_SIZE;
 	int variablesCount[] = ANALYZE_VARIABLES_COUNT;
@@ -79,9 +81,8 @@ void startAnalyze(int (*generateMethod)(),
 }
 
 void start() {
-	startAnalyze(&getFix,
-				 "<<<<<<<<<<<<<<<<<<<<<<FIX>>>>>>>>>>>>>>>>>\n");
-	startAnalyze(&getRange,
-				 "<<<<<<<<<<<<<<<<<<<<<<RANGE>>>>>>>>>>>>>>>>>\n");
+	setFileLoggerOutput();
+	startAnalyze(&getFix, "Fix");
+	startAnalyze(&getRange, "Range	");
 }
 

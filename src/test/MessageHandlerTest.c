@@ -30,7 +30,7 @@ void test_message_handler() {
 	col.insert = &insert;
 	col.alter = &alter;
 
-	initCollection(&col);
+	initMessageHandlerCollection(&col);
 
 	char msg[13];
 

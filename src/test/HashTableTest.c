@@ -31,6 +31,10 @@ Success find ip: c244bc30 port b22a
 Unsuccess alter ip: c038b02d port 3cf1 AND ip: f16ee764 port e65e
 receiveCount: 10
  * */
+void test_init() {
+	initMM(TRANSMITTERS_COUNT);
+}
+
 void test_case() {
 	initMM(4);
 
@@ -195,7 +199,8 @@ void test_insert() {
 }
 
 int main(int argc, char** argv) {
-	testSuit("Hash table suit", 4,
+	testSuit("Hash table suit", 5,
+			 initTestCase("Init test", &test_init),
 			 initTestCase("Find test", &test_insert),
 			 initTestCase("Inser test", &test_find),
 			 initTestCase("Alter test", &test_alterHashTable),

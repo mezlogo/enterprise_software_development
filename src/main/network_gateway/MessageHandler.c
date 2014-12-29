@@ -10,7 +10,7 @@
 
 Collection collection;
 
-void initCollection(Collection* _collection) {
+void initMessageHandlerCollection(Collection* _collection) {
 	collection = *_collection;
 }
 
