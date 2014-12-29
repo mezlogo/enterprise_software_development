@@ -10,6 +10,7 @@
 #include "Logger.h"
 #include "HashTable.h"
 #include "AVLTree.h"
+#include "BTree.h"
 #include "Configuration.h"
 #include "FakeTransmitters.h"
 #include "Collection.h"
@@ -126,6 +127,7 @@ void startAnalyzer() {
 }
 
 void startForCollection(Collection* collection) {
+	collection->initCollection(TRANSMITTERS_COUNT);
 	initBlock(collection);
 	initCollection(collection);
 
@@ -137,16 +139,23 @@ void start() {
 	Collection collection = {};
 
 	printf("%s", "\n\n<<<<<HASH TABLE>>>>>\n\n");
-	initHashTable(TRANSMITTERS_COUNT);
 	collection.insert = &insertHashTable;
 	collection.find = &findHashTable;
 	collection.alter = &alterHashTable;
+	collection.initCollection = &initHashTable;
 	startForCollection(&collection);
 
 	printf("%s", "\n\n<<<<<AVL TREE>>>>>\n\n");
-	initAVLTree(TRANSMITTERS_COUNT);
 	collection.insert = &insertAVLTree;
 	collection.find = &findAVLTree;
 	collection.alter = &alterAVLTree;
+	collection.initCollection = &initAVLTree;
+	startForCollection(&collection);
+	
+	printf("%s", "\n\n<<<<<B TREE>>>>>\n\n");
+	collection.insert = &insertBTree;
+	collection.find = &findBTree;
+	collection.alter = &alterBTree;
+	collection.initCollection = &initBTree;
 	startForCollection(&collection);
 }

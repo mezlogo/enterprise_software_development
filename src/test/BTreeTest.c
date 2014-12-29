@@ -13,7 +13,7 @@
 #define initMM(nodesCount)	assertLongEquals("Should init B tree", HASH_TABLE_INIT_SUCCESS, initBTree(nodesCount));
 
 void test_alter() {
-	/*int nodesCount = 4;
+	int nodesCount = 4;
 	initMM(nodesCount);
 
 	Key key1 = {1, 10};
@@ -70,7 +70,7 @@ void test_alter() {
 	assertLongEquals("Shouldn't alterBTree",
 					 ALTER_FAIL, alterBTree(NULL, &key2));
 	assertLongEquals("Shouldn't alterBTree",
-					 ALTER_SUCCESS, alterBTree(&key5, &key3));*/
+					 ALTER_SUCCESS, alterBTree(&key5, &key3));
 }
 void test_find() {
 	int nodesCount = 10;

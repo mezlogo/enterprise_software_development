@@ -58,9 +58,8 @@ char alterBTree(Key* source, Key* target) {
 		removeVar((char*) toDelete->key);
 		removeVar((char*) toDelete);
 	}
-
-
-	char result = deleteBNodeFromRoot(root, source, &deleteOp);
+	char removeStatus;
+	root = deleteBNodeFromRoot(root, source, &deleteOp, &removeStatus);
 
 	if (NULL == target) {
 		return REMOVE_SUCCESS;

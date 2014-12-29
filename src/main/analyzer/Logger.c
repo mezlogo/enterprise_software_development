@@ -1,5 +1,7 @@
 #include <stdio.h>
+#include <string.h>
 #include "Configuration.h"
+
 
 unsigned long primaryIndex;
 unsigned long secondaryIndex;
@@ -62,19 +64,42 @@ unsigned long max(unsigned long* array,
 	return result;
 }
 
-void printMeasuring(unsigned long* array,
-					unsigned long length, char* measuringName) {
-	printf("\n%s%s%lu\n", measuringName, "\nCount: ",
-		   length);
-	printArray(array, length);
-	printf("%s%lu%s%lu%s%lu\n", "\nMin: ", min(array,
-			length), "\nMax: ", max(array, length), "\nAvg: ",
-		   sum(array, length) / (0 == length ? 1 : length));
+void fileLoggerOutput(char * name, unsigned long* array, unsigned long length, char* measuringName, unsigned long maxValue, unsigned long averageValue, unsigned long minValue) {
+	FILE* file; 
+	#define fileNameLength 50
+	char fileName[fileNameLength];
+	sprintf(fileName, "%s [%s] (%lu, %lu, %lu).txt", name, measuringName, minValue, averageValue, maxValue);
+	file = fopen(fileName, "wb");
+ 
+	if(NULL == file) {
+		printf("%s:%s\n", "Can't create file ", fileName);
+		return;
+	}
+ 
+	int index = 0;
+	for (; index < length; index++) {fprintf(file, "%lu ", array[index]); }
+ 
+	fclose(file);
 }
 
-void show() {
-	printMeasuring(primaryMeasuring, primaryIndex,
-				   "Primary time: ");
-	printMeasuring(secondaryMeasuring, secondaryIndex,
-				   "Secondary time: ");
+void consoleLoggerOutput(char * name, unsigned long* array,	unsigned long length, char* measuringName, unsigned long maxValue, unsigned long averageValue, unsigned long minValue)  {
+	printf("\n%s%s%lu\n", measuringName, "\nCount: ", length);
+	printArray(array, length);
+	printf("%s%lu%s%lu%s%lu\n", "\nMin: ", minValue, "\nMax: ", maxValue, "\nAvg: ", averageValue);
 }
+
+void (*showMeasure)(char * name, unsigned long* array,	unsigned long length, char* measuringName, unsigned long maxValue, unsigned long averageValue, unsigned long minValue) = &consoleLoggerOutput;
+
+void setShowMeasure(void (*_showMeasure)(char * name, unsigned long* array,	unsigned long length, char* measuringName, unsigned long maxValue, unsigned long averageValue, unsigned long minValue)) {
+	showMeasure = _showMeasure;
+}
+
+void setFileLoggerOutput() { showMeasure = &fileLoggerOutput; }
+
+void show(char * name) {
+	#define calcAndShow(name, array, length, measuringName) showMeasure(name, array, length, measuringName, max(array, length), sum(array, length) / (0 == length ? 1 : length), min(array,	length))
+	calcAndShow(name, primaryMeasuring, primaryIndex, "Primary time: ");
+	calcAndShow(name, secondaryMeasuring, secondaryIndex, "Secondary time: ");
+}
+
+

@@ -3,6 +3,7 @@
 #include "SimpleCUnit.h"
 
 void test_case() {
+	
 	reset();
 	logPrimary(20);
 	logPrimary(1);
@@ -13,7 +14,9 @@ void test_case() {
 	logSecondary(155);
 	logSecondary(1);
 	logSecondary(8);
-	show();
+	show("Console test");
+	setFileLoggerOutput();
+	show("File test");
 
 	reset();
 	logSecondary(1559);
@@ -21,7 +24,7 @@ void test_case() {
 	logPrimary(208);
 	logPrimary(19);
 	logSecondary(825);
-	show();
+	show("Second file test");
 }
 
 int main(int argc, char** argv) {
