@@ -126,7 +126,7 @@ BNode** getBNodeParentOfLefter(BNode* root) {
 	return currentParentPointer;
 }
 
-BNode* deleteBNodeFromRoot(BNode* root, Key* key,  void (*deleteOp)(BNode*)) {
+BNode* deleteBNodeFromRoot(BNode* root, Key* key,  void (*deleteOp)(BNode*), char* status) {
 	if (NULL == root || NULL == key) { return root; }
 
 	BNode* target = root;
@@ -165,6 +165,7 @@ BNode* deleteBNodeFromRoot(BNode* root, Key* key,  void (*deleteOp)(BNode*)) {
 
 		if (NULL == parentPointerTarget) {
 			printf("%s", "Not found\n");
+			*status = B_TREE_NOT_FOUND;
 			return root;
 		}
 
@@ -198,6 +199,7 @@ BNode* deleteBNodeFromRoot(BNode* root, Key* key,  void (*deleteOp)(BNode*)) {
 		}
 	}
 
+	*status = B_TREE_REMOVE_SUCCESS;
 	deleteOp(target);
 
 	return root;

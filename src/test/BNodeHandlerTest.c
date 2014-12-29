@@ -83,24 +83,26 @@ void test_case() {
 	assertLongEquals("Should be eq", (unsigned long) NULL,
 					 (unsigned long) getBNodeParentOfLefter(&node5));
 
+	char rmStatus = 0;
 	int counter = 0;
 	void deleteOp(BNode * toDeleete) {
 		counter++;
 	}
 	assertLongEquals("Should be eq", (unsigned long) NULL, (unsigned long) deleteBNodeFromRoot(&node1,
-					 &key1,  &deleteOp));
-
+					 &key1,  &deleteOp, &rmStatus));
+	assertLongEquals("Should be eq", B_TREE_REMOVE_SUCCESS, rmStatus);
 	/* 		3
 	 * 1		4
 	 * 				5*/
-	BNode* currentRoot = deleteBNodeFromRoot(&node2, &key2,  &deleteOp);
+
+	BNode* currentRoot = deleteBNodeFromRoot(&node2, &key2,  &deleteOp, &rmStatus);
 	assertLongEquals("Should be eq", (unsigned long) &node3, (unsigned long) currentRoot);
 	assertLongEquals("Should be eq", (unsigned long) &node1, (unsigned long) currentRoot->left);
 	assertLongEquals("Should be eq", (unsigned long) &node4, (unsigned long) currentRoot->right);
 
 	/* 		4
 	 * 1		5*/
-	currentRoot = deleteBNodeFromRoot(&node3, &key3,  &deleteOp);
+	currentRoot = deleteBNodeFromRoot(&node3, &key3,  &deleteOp, &rmStatus);
 	assertLongEquals("Should be eq", (unsigned long) &node4, (unsigned long) currentRoot);
 	assertLongEquals("Should be eq", (unsigned long) &node1, (unsigned long) currentRoot->left);
 	assertLongEquals("Should be eq", (unsigned long) &node5, (unsigned long) currentRoot->right);
@@ -111,13 +113,13 @@ void test_case() {
 
 	/* 		4
 	 *  		5*/
-	currentRoot = deleteBNodeFromRoot(&node4, &key1,  &deleteOp);
+	currentRoot = deleteBNodeFromRoot(&node4, &key1,  &deleteOp, &rmStatus);
 	assertLongEquals("Should be eq", (unsigned long) &node4, (unsigned long) currentRoot);
 	assertLongEquals("Should be eq", (unsigned long) NULL, (unsigned long) currentRoot->left);
 	assertLongEquals("Should be eq", (unsigned long) &node5, (unsigned long) currentRoot->right);
 
 	/* 		5*/
-	currentRoot = deleteBNodeFromRoot(&node4, &key4,  &deleteOp);
+	currentRoot = deleteBNodeFromRoot(&node4, &key4,  &deleteOp, &rmStatus);
 	assertLongEquals("Should be eq", (unsigned long) &node5, (unsigned long) currentRoot);
 	assertLongEquals("Should be eq", (unsigned long) NULL, (unsigned long) currentRoot->left);
 	assertLongEquals("Should be eq", (unsigned long) NULL, (unsigned long) currentRoot->right);
@@ -130,7 +132,7 @@ void test_case() {
 	assertLongEquals("Should insert",  TREE_INSERT_OK, insertBNodeInsideRoot(&node5, &node4));
 
 	/* 		4*/
-	currentRoot = deleteBNodeFromRoot(&node5, &key5,  &deleteOp);
+	currentRoot = deleteBNodeFromRoot(&node5, &key5,  &deleteOp, &rmStatus);
 	assertLongEquals("Should be eq", (unsigned long) &node4, (unsigned long) currentRoot);
 	assertLongEquals("Should be eq", (unsigned long) NULL, (unsigned long) currentRoot->left);
 	assertLongEquals("Should be eq", (unsigned long) NULL, (unsigned long) currentRoot->right);
@@ -160,7 +162,7 @@ void test_case() {
 	assertLongEquals("Should be eq", (unsigned long) &node6, (unsigned long) node5.right);
 	assertLongEquals("Should be eq", (unsigned long) &node3, (unsigned long) node5.left);
 
-	currentRoot = deleteBNodeFromRoot(&node2, &key5,  &deleteOp);
+	currentRoot = deleteBNodeFromRoot(&node2, &key5,  &deleteOp, &rmStatus);
 	assertLongEquals("Should be eq", (unsigned long) &node2, (unsigned long) currentRoot);
 	assertLongEquals("Should be eq", (unsigned long) &node6, (unsigned long) currentRoot->right);
 
@@ -195,7 +197,7 @@ void test_case() {
 	 * 1 	     6
 	 * 		 3     	  8
 	 * 		   4   7 */
-	currentRoot = deleteBNodeFromRoot(&node2, &key5,  &deleteOp);
+	currentRoot = deleteBNodeFromRoot(&node2, &key5,  &deleteOp, &rmStatus);
 	assertLongEquals("Should be eq", (unsigned long) &node2, (unsigned long) currentRoot);
 	assertLongEquals("Should be eq", (unsigned long) &node8, (unsigned long) node6.right);
 	assertLongEquals("Should be eq", (unsigned long) &node6, (unsigned long) currentRoot->right);
@@ -204,17 +206,19 @@ void test_case() {
 	 * 1 	     6
 	 * 		 4     	  8
 	 * 		       7 */
-	currentRoot = deleteBNodeFromRoot(&node2, &key3,  &deleteOp);
+	currentRoot = deleteBNodeFromRoot(&node2, &key3,  &deleteOp, &rmStatus);
 	assertLongEquals("Should be eq", (unsigned long) &node4, (unsigned long) node6.left);
 	/* 		2
 	 * 1 	     6
 	 * 		 4     	  7*/
-	currentRoot = deleteBNodeFromRoot(&node2, &key8,  &deleteOp);
+	currentRoot = deleteBNodeFromRoot(&node2, &key8,  &deleteOp, &rmStatus);
 	assertLongEquals("Should be eq", (unsigned long) &node7, (unsigned long) node6.right);
+	assertLongEquals("Should be eq", B_TREE_REMOVE_SUCCESS, rmStatus);
 
 	assertLongEquals("Should be eq", 10, counter);
 
-	deleteBNodeFromRoot(&node2, &key3,  &deleteOp);
+	deleteBNodeFromRoot(&node2, &key3,  &deleteOp, &rmStatus);
+	assertLongEquals("Should be eq", B_TREE_NOT_FOUND, rmStatus);
 
 }
 
