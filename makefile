@@ -5,8 +5,10 @@ TEST_DIR = ${SRC_DIR}/test
 HEADERS_DIR = ${MAIN_DIR}/header
 
 MEMORY_MANAGER_IMPLEMENT_DIR = ${MAIN_DIR}/memory_manager
-ANALYZER_IMPLEMENT_DIR = ${MAIN_DIR}/analyzer
-NETWORK_GATEWAY_DIR = ${MAIN_DIR}/network_gateway
+UTILS_DIR = ${MAIN_DIR}/utils
+COLLECTIONS_DIR = ${MAIN_DIR}/collections
+MEMORY_MANAGER_ANALYZER_DIR = ${MAIN_DIR}/memory_manager_analyzer
+NETWORK_GATEWAY_ANAYZER_DIR = ${MAIN_DIR}/network_gateway_analyzer
 
 TEST_FRMAWORK_DIR = lib
 
@@ -105,7 +107,7 @@ compile_and_test_memory_manager: compile_and_test_array_handler compile_and_test
 	
 compile_and_test_multi_thread_task_runner: make_build_dir
 	${START_MSG} multi_thread_task_runner
-	${COMPILE_SOURCE} ${ANALYZER_IMPLEMENT_DIR}/MultiThreadTaskRunner.c -o ${MULTI_THREAD_TASK_RUNNER_OBJECT} -I${HEADERS_DIR}	
+	${COMPILE_SOURCE} ${MEMORY_MANAGER_ANALYZER_DIR}/MultiThreadTaskRunner.c -o ${MULTI_THREAD_TASK_RUNNER_OBJECT} -I${HEADERS_DIR}	
 	${ARCHIVE} ${BUILD_DIR}/libMultiThreadTaskRunner.a ${MULTI_THREAD_TASK_RUNNER_OBJECT}
 	${COMPILE_TEST} ${TEST_DIR}/MultiThreadTaskRunnerTest.c -o ${BUILD_DIR}/MultiThreadTaskRunnerTest -I${TEST_FRMAWORK_DIR} -L${BUILD_DIR} -lMultiThreadTaskRunner -I${HEADERS_DIR} ${MULTI_THREAD_COMPILE_FLAG}
 	./${BUILD_DIR}/MultiThreadTaskRunnerTest
@@ -113,7 +115,7 @@ compile_and_test_multi_thread_task_runner: make_build_dir
 
 compile_and_test_single_thread_task_runner: make_build_dir
 	${START_MSG} single_thread_task_runner
-	${COMPILE_SOURCE} ${ANALYZER_IMPLEMENT_DIR}/SingleThreadTaskRunner.c -o ${SINGLE_THREAD_TASK_RUNNER} -I${HEADERS_DIR}	
+	${COMPILE_SOURCE} ${MEMORY_MANAGER_ANALYZER_DIR}/SingleThreadTaskRunner.c -o ${SINGLE_THREAD_TASK_RUNNER} -I${HEADERS_DIR}	
 	${ARCHIVE} ${BUILD_DIR}/libSingleThreadTaskRunner.a ${SINGLE_THREAD_TASK_RUNNER}
 	${COMPILE_TEST} ${TEST_DIR}/SingleThreadTaskRunnerTest.c -o ${BUILD_DIR}/SingleThreadTaskRunnerTest -I${TEST_FRMAWORK_DIR} -L${BUILD_DIR} -lSingleThreadTaskRunner -I${HEADERS_DIR}
 	./${BUILD_DIR}/SingleThreadTaskRunnerTest
@@ -121,7 +123,7 @@ compile_and_test_single_thread_task_runner: make_build_dir
 	
 compile_and_test_timer: make_build_dir
 	${START_MSG} timer
-	${COMPILE_SOURCE} ${ANALYZER_IMPLEMENT_DIR}/Timer.c -o ${TIMER_OBJECT} -I${HEADERS_DIR} -lrt	
+	${COMPILE_SOURCE} ${UTILS_DIR}/Timer.c -o ${TIMER_OBJECT} -I${HEADERS_DIR} -lrt	
 	${ARCHIVE} ${BUILD_DIR}/libTimer.a ${TIMER_OBJECT}
 	${COMPILE_TEST} ${TEST_DIR}/TimerTest.c -o ${BUILD_DIR}/TimerTest -I${TEST_FRMAWORK_DIR} -L${BUILD_DIR} -lTimer -I${HEADERS_DIR}	
 	./${BUILD_DIR}/TimerTest
@@ -129,7 +131,7 @@ compile_and_test_timer: make_build_dir
 	
 compile_and_test_random: compile_and_test_timer
 	${START_MSG} random
-	${COMPILE_SOURCE} ${ANALYZER_IMPLEMENT_DIR}/Random.c -o ${RANDOM_OBJECT} -I${HEADERS_DIR}	
+	${COMPILE_SOURCE} ${UTILS_DIR}/Random.c -o ${RANDOM_OBJECT} -I${HEADERS_DIR}	
 	${ARCHIVE} ${BUILD_DIR}/libRandom.a ${RANDOM_OBJECT} ${TIMER_OBJECT}
 	${COMPILE_TEST} ${TEST_DIR}/RandomTest.c -o ${BUILD_DIR}/RandomTest -I${TEST_FRMAWORK_DIR} -L${BUILD_DIR} -lRandom -I${HEADERS_DIR}	
 	./${BUILD_DIR}/RandomTest
@@ -137,7 +139,7 @@ compile_and_test_random: compile_and_test_timer
 
 compile_and_test_size_generator: compile_and_test_random
 	${START_MSG} size_generator
-	${COMPILE_SOURCE} ${ANALYZER_IMPLEMENT_DIR}/SizeGenerator.c -o ${SIZE_GENERATOR} -I${HEADERS_DIR}	
+	${COMPILE_SOURCE} ${MEMORY_MANAGER_ANALYZER_DIR}/SizeGenerator.c -o ${SIZE_GENERATOR} -I${HEADERS_DIR}	
 	${ARCHIVE} ${BUILD_DIR}/libSizeGenerator.a ${RANDOM_OBJECT} ${TIMER_OBJECT} ${SIZE_GENERATOR}
 	${COMPILE_TEST} ${TEST_DIR}/SizeGeneratorTest.c -o ${BUILD_DIR}/SizeGeneratorTest -I${TEST_FRMAWORK_DIR} -L${BUILD_DIR} -lSizeGenerator -I${HEADERS_DIR}	
 	./${BUILD_DIR}/SizeGeneratorTest
@@ -145,7 +147,7 @@ compile_and_test_size_generator: compile_and_test_random
 
 compile_and_test_cyclic_list: make_build_dir
 	${START_MSG} cyclic_list
-	${COMPILE_SOURCE} ${ANALYZER_IMPLEMENT_DIR}/CyclicList.c -o ${CYCLIC_LIST_OBJECT} -I${HEADERS_DIR}	
+	${COMPILE_SOURCE} ${MEMORY_MANAGER_ANALYZER_DIR}/CyclicList.c -o ${CYCLIC_LIST_OBJECT} -I${HEADERS_DIR}	
 	${ARCHIVE} ${BUILD_DIR}/libCyclicList.a ${CYCLIC_LIST_OBJECT}
 	${COMPILE_TEST} ${TEST_DIR}/CyclicListTest.c -o ${BUILD_DIR}/CyclicListTest -I${TEST_FRMAWORK_DIR} -L${BUILD_DIR} -lCyclicList -I${HEADERS_DIR}	
 	./${BUILD_DIR}/CyclicListTest
@@ -153,7 +155,7 @@ compile_and_test_cyclic_list: make_build_dir
 
 compile_and_test_logger: make_build_dir
 	${START_MSG} logger
-	${COMPILE_SOURCE} ${ANALYZER_IMPLEMENT_DIR}/Logger.c -o ${LOGGER_OBJECT} -I${HEADERS_DIR}	
+	${COMPILE_SOURCE} ${UTILS_DIR}/Logger.c -o ${LOGGER_OBJECT} -I${HEADERS_DIR}	
 	${ARCHIVE} ${BUILD_DIR}/libLogger.a ${LOGGER_OBJECT}
 	${COMPILE_TEST} ${TEST_DIR}/LoggerTest.c -o ${BUILD_DIR}/LoggerTest -I${TEST_FRMAWORK_DIR} -L${BUILD_DIR} -lLogger -I${HEADERS_DIR}	
 	./${BUILD_DIR}/LoggerTest
@@ -161,7 +163,7 @@ compile_and_test_logger: make_build_dir
 
 compile_and_test_analyzer: compile_and_test_size_generator compile_and_test_cyclic_list compile_and_test_multi_thread_task_runner compile_and_test_logger compile_and_test_memory_manager
 	${START_MSG} analyzer
-	${COMPILE_SOURCE} ${ANALYZER_IMPLEMENT_DIR}/AnalyzerAPI.c -o ${ANALYZER_API_OBJECT} -I${HEADERS_DIR}	
+	${COMPILE_SOURCE} ${MEMORY_MANAGER_ANALYZER_DIR}/AnalyzerAPI.c -o ${ANALYZER_API_OBJECT} -I${HEADERS_DIR}	
 	${ARCHIVE} ${BUILD_DIR}/libAnalyzerAPI.a ${ANALYZER_API_OBJECT} ${MEMORY_MANAGER_OBJECT} ${RANDOM_OBJECT} ${TIMER_OBJECT} ${SIZE_GENERATOR} ${MULTI_THREAD_TASK_RUNNER_OBJECT} ${CYCLIC_LIST_OBJECT} ${LOGGER_OBJECT} ${ARRAY_HANDLER_OBJECT} ${SUBHEAP_HANDLER_OBJECT}
 	${COMPILE_TEST} ${TEST_DIR}/AnalyzerAPITest.c -o ${BUILD_DIR}/AnalyzerAPITest -I${TEST_FRMAWORK_DIR} -L${BUILD_DIR} -lAnalyzerAPI -I${HEADERS_DIR} ${MULTI_THREAD_COMPILE_FLAG}	
 	./${BUILD_DIR}/AnalyzerAPITest
@@ -172,7 +174,7 @@ compile_and_test_analyzer: compile_and_test_size_generator compile_and_test_cycl
 	
 compile_and_test_key_handler: make_build_dir
 	${START_MSG} key_handler
-	${COMPILE_SOURCE} ${NETWORK_GATEWAY_DIR}/KeyHandler.c -o ${KEY_HANDLER_OBJECT} -I${HEADERS_DIR}	
+	${COMPILE_SOURCE} ${COLLECTIONS_DIR}/KeyHandler.c -o ${KEY_HANDLER_OBJECT} -I${HEADERS_DIR}	
 	${ARCHIVE} ${BUILD_DIR}/libKeyHandler.a ${KEY_HANDLER_OBJECT}
 	${COMPILE_TEST} ${TEST_DIR}/KeyHandlerTest.c -o ${BUILD_DIR}/KeyHandlerTest -I${TEST_FRMAWORK_DIR} -I${HEADERS_DIR}	 -L${BUILD_DIR} -lKeyHandler
 	./${BUILD_DIR}/KeyHandlerTest
@@ -180,7 +182,7 @@ compile_and_test_key_handler: make_build_dir
 	
 compile_and_test_linked_list_handler: compile_and_test_key_handler
 	${START_MSG} linked_list_handler
-	${COMPILE_SOURCE} ${NETWORK_GATEWAY_DIR}/LinkedListHandler.c -o ${LINKED_LIST_HANDER_OBJECT} -I${HEADERS_DIR}	
+	${COMPILE_SOURCE} ${COLLECTIONS_DIR}/LinkedListHandler.c -o ${LINKED_LIST_HANDER_OBJECT} -I${HEADERS_DIR}	
 	${ARCHIVE} ${BUILD_DIR}/libLinkedListHandler.a ${LINKED_LIST_HANDER_OBJECT} ${KEY_HANDLER_OBJECT}
 	${COMPILE_TEST} ${TEST_DIR}/LinkedListHandlerTest.c -o ${BUILD_DIR}/LinkedListHandlerTest -I${TEST_FRMAWORK_DIR} -I${HEADERS_DIR} -L${BUILD_DIR} -lLinkedListHandler
 	./${BUILD_DIR}/LinkedListHandlerTest
@@ -188,7 +190,7 @@ compile_and_test_linked_list_handler: compile_and_test_key_handler
 
 compile_and_test_hash_table: compile_and_test_linked_list_handler compile_and_test_memory_manager compile_and_test_key_handler
 	${START_MSG} hash_table
-	${COMPILE_SOURCE} ${NETWORK_GATEWAY_DIR}/HashTable.c -o ${HASH_TABLE_OBJECT} -I${HEADERS_DIR}	
+	${COMPILE_SOURCE} ${COLLECTIONS_DIR}/HashTable.c -o ${HASH_TABLE_OBJECT} -I${HEADERS_DIR}	
 	${ARCHIVE} ${BUILD_DIR}/libHashTable.a ${LINKED_LIST_HANDER_OBJECT} ${HASH_TABLE_OBJECT} ${MEMORY_MANAGER_OBJECT} ${SUBHEAP_HANDLER_OBJECT} ${ARRAY_HANDLER_OBJECT} ${KEY_HANDLER_OBJECT}
 	${COMPILE_TEST} ${TEST_DIR}/HashTableTest.c -o ${BUILD_DIR}/HashTableTest -I${TEST_FRMAWORK_DIR} -I${HEADERS_DIR} -L${BUILD_DIR} -lHashTable
 	./${BUILD_DIR}/HashTableTest
@@ -196,7 +198,7 @@ compile_and_test_hash_table: compile_and_test_linked_list_handler compile_and_te
 
 compile_and_test_b_node_handler: compile_and_test_key_handler
 	${START_MSG} b_node_handler
-	${COMPILE_SOURCE} ${NETWORK_GATEWAY_DIR}/BNodeHandler.c -o ${B_NODE_HANDER_OBJECT} -I${HEADERS_DIR}	
+	${COMPILE_SOURCE} ${COLLECTIONS_DIR}/BNodeHandler.c -o ${B_NODE_HANDER_OBJECT} -I${HEADERS_DIR}	
 	${ARCHIVE} ${BUILD_DIR}/libBNodeHandler.a ${B_NODE_HANDER_OBJECT} ${KEY_HANDLER_OBJECT}
 	${COMPILE_TEST} ${TEST_DIR}/BNodeHandlerTest.c -o ${BUILD_DIR}/BNodeHandlerTest -I${TEST_FRMAWORK_DIR} -I${HEADERS_DIR} -L${BUILD_DIR} -lBNodeHandler
 	./${BUILD_DIR}/BNodeHandlerTest
@@ -204,7 +206,7 @@ compile_and_test_b_node_handler: compile_and_test_key_handler
 
 compile_and_test_b_tree: compile_and_test_key_handler compile_and_test_memory_manager compile_and_test_b_node_handler
 	${START_MSG} b_tree
-	${COMPILE_SOURCE} ${NETWORK_GATEWAY_DIR}/BTree.c -o ${B_TREE_OBJECT} -I${HEADERS_DIR}	
+	${COMPILE_SOURCE} ${COLLECTIONS_DIR}/BTree.c -o ${B_TREE_OBJECT} -I${HEADERS_DIR}	
 	${ARCHIVE} ${BUILD_DIR}/libBTree.a ${B_TREE_OBJECT} ${B_NODE_HANDER_OBJECT} ${KEY_HANDLER_OBJECT}  ${MEMORY_MANAGER_OBJECT} ${SUBHEAP_HANDLER_OBJECT} ${ARRAY_HANDLER_OBJECT}
 	${COMPILE_TEST} ${TEST_DIR}/BTreeTest.c -o ${BUILD_DIR}/BTreeTest -I${TEST_FRMAWORK_DIR} -I${HEADERS_DIR} -L${BUILD_DIR} -lBTree
 	./${BUILD_DIR}/BTreeTest
@@ -212,7 +214,7 @@ compile_and_test_b_tree: compile_and_test_key_handler compile_and_test_memory_ma
 
 compile_and_test_avl_node_handler: compile_and_test_key_handler
 	${START_MSG} avl_node_handler
-	${COMPILE_SOURCE} ${NETWORK_GATEWAY_DIR}/AVLNodeHandler.c -o ${AVL_NODE_HANDER_OBJECT} -I${HEADERS_DIR}	
+	${COMPILE_SOURCE} ${COLLECTIONS_DIR}/AVLNodeHandler.c -o ${AVL_NODE_HANDER_OBJECT} -I${HEADERS_DIR}	
 	${ARCHIVE} ${BUILD_DIR}/libAVLNodeHandler.a ${AVL_NODE_HANDER_OBJECT} ${KEY_HANDLER_OBJECT}
 	${COMPILE_TEST} ${TEST_DIR}/AVLNodeHandlerTest.c -o ${BUILD_DIR}/AVLNodeHandlerTest -I${TEST_FRMAWORK_DIR} -I${HEADERS_DIR} -L${BUILD_DIR} -lAVLNodeHandler
 	./${BUILD_DIR}/AVLNodeHandlerTest
@@ -220,7 +222,7 @@ compile_and_test_avl_node_handler: compile_and_test_key_handler
 
 compile_and_test_avl_tree: compile_and_test_key_handler compile_and_test_memory_manager compile_and_test_avl_node_handler
 	${START_MSG} avl_tree
-	${COMPILE_SOURCE} ${NETWORK_GATEWAY_DIR}/AVLTree.c -o ${AVL_TREE_OBJECT} -I${HEADERS_DIR}	
+	${COMPILE_SOURCE} ${COLLECTIONS_DIR}/AVLTree.c -o ${AVL_TREE_OBJECT} -I${HEADERS_DIR}	
 	${ARCHIVE} ${BUILD_DIR}/libAVLTree.a ${AVL_TREE_OBJECT} ${AVL_NODE_HANDER_OBJECT} ${KEY_HANDLER_OBJECT}  ${MEMORY_MANAGER_OBJECT} ${SUBHEAP_HANDLER_OBJECT} ${ARRAY_HANDLER_OBJECT}
 	${COMPILE_TEST} ${TEST_DIR}/AVLTreeTest.c -o ${BUILD_DIR}/AVLTreeTest -I${TEST_FRMAWORK_DIR} -I${HEADERS_DIR} -L${BUILD_DIR} -lAVLTree
 	./${BUILD_DIR}/AVLTreeTest
@@ -229,7 +231,7 @@ compile_and_test_avl_tree: compile_and_test_key_handler compile_and_test_memory_
 ########################Network gateway###################################	
 compile_and_test_key_generator: compile_and_test_key_handler compile_and_test_random
 	${START_MSG} key_generator
-	${COMPILE_SOURCE} ${NETWORK_GATEWAY_DIR}/KeyGenerator.c -o ${KEY_GENERATOR_OBJECT} -I${HEADERS_DIR}	
+	${COMPILE_SOURCE} ${NETWORK_GATEWAY_ANAYZER_DIR}/KeyGenerator.c -o ${KEY_GENERATOR_OBJECT} -I${HEADERS_DIR}	
 	${ARCHIVE} ${BUILD_DIR}/libKeyGenerator.a ${KEY_GENERATOR_OBJECT} ${RANDOM_OBJECT} ${TIMER_OBJECT} ${KEY_HANDLER_OBJECT}
 	${COMPILE_TEST} ${TEST_DIR}/KeyGeneratorTest.c -o ${BUILD_DIR}/KeyGeneratorTest -I${TEST_FRMAWORK_DIR} -I${HEADERS_DIR}	 -L${BUILD_DIR} -lKeyGenerator
 	./${BUILD_DIR}/KeyGeneratorTest
@@ -237,7 +239,7 @@ compile_and_test_key_generator: compile_and_test_key_handler compile_and_test_ra
 	
 compile_and_test_fake_transmitters: compile_and_test_key_generator
 	${START_MSG} fake_transmitters
-	${COMPILE_SOURCE} ${NETWORK_GATEWAY_DIR}/FakeTransmitters.c -o ${FAKE_TRANSMITTERS_OBJECT} -I${HEADERS_DIR}	
+	${COMPILE_SOURCE} ${NETWORK_GATEWAY_ANAYZER_DIR}/FakeTransmitters.c -o ${FAKE_TRANSMITTERS_OBJECT} -I${HEADERS_DIR}	
 	${ARCHIVE} ${BUILD_DIR}/libFakeTransmitters.a ${KEY_GENERATOR_OBJECT} ${RANDOM_OBJECT} ${TIMER_OBJECT} ${KEY_HANDLER_OBJECT} ${FAKE_TRANSMITTERS_OBJECT}
 	${COMPILE_TEST} ${TEST_DIR}/FakeTransmittersTest.c -o ${BUILD_DIR}/FakeTransmittersTest -I${TEST_FRMAWORK_DIR} -I${HEADERS_DIR}	 -L${BUILD_DIR} -lFakeTransmitters
 	./${BUILD_DIR}/FakeTransmittersTest
@@ -245,7 +247,7 @@ compile_and_test_fake_transmitters: compile_and_test_key_generator
 		
 compile_and_test_client_server: make_build_dir
 	${START_MSG} client_server
-	${COMPILE_SOURCE} ${NETWORK_GATEWAY_DIR}/ClientServer.c -o ${CLIENT_SERVER_OBJECT} -I${HEADERS_DIR}	
+	${COMPILE_SOURCE} ${NETWORK_GATEWAY_ANAYZER_DIR}/ClientServer.c -o ${CLIENT_SERVER_OBJECT} -I${HEADERS_DIR}	
 	${ARCHIVE} ${BUILD_DIR}/libClientServer.a ${CLIENT_SERVER_OBJECT}
 	${COMPILE_TEST} ${TEST_DIR}/ClientServerTest.c -o ${BUILD_DIR}/ClientServerTest -I${TEST_FRMAWORK_DIR} -I${HEADERS_DIR} -L${BUILD_DIR} -lClientServer
 	./${BUILD_DIR}/ClientServerTest
@@ -253,7 +255,7 @@ compile_and_test_client_server: make_build_dir
 
 compile_and_test_message_handler: compile_and_test_logger compile_and_test_timer compile_and_test_key_handler
 	${START_MSG} message_handler
-	${COMPILE_SOURCE} ${NETWORK_GATEWAY_DIR}/MessageHandler.c -o ${MESSAGE_HANDLER_OBJECT} -I${HEADERS_DIR}	
+	${COMPILE_SOURCE} ${NETWORK_GATEWAY_ANAYZER_DIR}/MessageHandler.c -o ${MESSAGE_HANDLER_OBJECT} -I${HEADERS_DIR}	
 	${ARCHIVE} ${BUILD_DIR}/libMessageHandler.a ${MESSAGE_HANDLER_OBJECT} ${KEY_HANDLER_OBJECT} ${LOGGER_OBJECT} ${TIMER_OBJECT}
 	${COMPILE_TEST} ${TEST_DIR}/MessageHandlerTest.c -o ${BUILD_DIR}/MessageHandlerTest -I${TEST_FRMAWORK_DIR} -I${HEADERS_DIR} -L${BUILD_DIR} -lMessageHandler
 	./${BUILD_DIR}/MessageHandlerTest
@@ -261,7 +263,7 @@ compile_and_test_message_handler: compile_and_test_logger compile_and_test_timer
 	
 compile_and_test_network_gateway_api: compile_and_test_logger compile_and_test_fake_transmitters compile_and_test_message_handler compile_and_test_hash_table compile_and_test_message_handler compile_and_test_memory_manager compile_and_test_client_server compile_and_test_avl_tree compile_and_test_b_tree
 	${START_MSG} network_gateway_api 
-	${COMPILE_SOURCE} ${NETWORK_GATEWAY_DIR}/NetworkGatewayAPI.c -o ${NETWORK_GATEWAY_API_OBJECT} -I${HEADERS_DIR}
+	${COMPILE_SOURCE} ${NETWORK_GATEWAY_ANAYZER_DIR}/NetworkGatewayAPI.c -o ${NETWORK_GATEWAY_API_OBJECT} -I${HEADERS_DIR}
 	${ARCHIVE} ${BUILD_DIR}/libNetworkGatewayAPI.a ${NETWORK_GATEWAY_API_OBJECT} ${LOGGER_OBJECT} ${KEY_GENERATOR_OBJECT} ${RANDOM_OBJECT} ${TIMER_OBJECT} ${KEY_HANDLER_OBJECT} ${FAKE_TRANSMITTERS_OBJECT} ${LINKED_LIST_HANDER_OBJECT} ${HASH_TABLE_OBJECT} ${MEMORY_MANAGER_OBJECT} ${SUBHEAP_HANDLER_OBJECT} ${ARRAY_HANDLER_OBJECT} ${MESSAGE_HANDLER_OBJECT} ${KEY_HANDLER_OBJECT} ${LOGGER_OBJECT} ${TIMER_OBJECT} ${CLIENT_SERVER_OBJECT} ${AVL_TREE_OBJECT} ${AVL_NODE_HANDER_OBJECT} ${B_TREE_OBJECT} ${B_NODE_HANDER_OBJECT}
 	${COMPILE_TEST} ${TEST_DIR}/NetworkGatewayAPITest.c -o ${BUILD_DIR}/NetworkGatewayAPITest -I${TEST_FRMAWORK_DIR} -I${HEADERS_DIR} -L${BUILD_DIR} -lNetworkGatewayAPI  ${MULTI_THREAD_COMPILE_FLAG}
 	./${BUILD_DIR}/NetworkGatewayAPITest
