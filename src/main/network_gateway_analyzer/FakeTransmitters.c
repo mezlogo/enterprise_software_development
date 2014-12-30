@@ -23,17 +23,12 @@ void setTransmitters(Key* newTransmitters,
  * 4) если входной параметр (итерация) 50-ая, то изменить данные передатчика
  *		и записать измененые данные в сообщение
  * */
-void generateMessage(char* message,
-					 unsigned long value) {
+void generateMessage(char* message,	 unsigned long value) {
 	message[0] = MESSAGE_TYPE_REGULAR;
-
-	Key* currentKey =
-		&transmitters[generateIntByWidth(size)];
-
+	Key* currentKey = &transmitters[generateIntByWidth(size)];
 	keyToCharArray(currentKey, &message[1]);
 
-	if (0 == value %
-			TRANSMITTER_ALTER_THRESHOLD_VALUE) {
+	if (0 == value % TRANSMITTER_ALTER_THRESHOLD_VALUE) {
 		message[0] = MESSAGE_TYPE_ALTER;
 		generateUniqKey(currentKey, transmitters, size);
 		keyToCharArray(currentKey, &message[7]);

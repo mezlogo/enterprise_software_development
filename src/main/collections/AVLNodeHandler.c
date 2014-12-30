@@ -62,7 +62,6 @@ AVLNode* insertAVLByNode(AVLNode* root, AVLNode* target) {
 
 	if (1 == compareKeys(root->key, target->key))
 	{ root->left = insertAVLByNode(root->left, target); }
-
 	else
 	{ root->right = insertAVLByNode(root->right, target); }
 
@@ -70,8 +69,7 @@ AVLNode* insertAVLByNode(AVLNode* root, AVLNode* target) {
 }
 
 AVLNode* findMin(AVLNode* root) {
-	return NULL != root->left ? findMin(
-			   root->left) : root;
+	return NULL != root->left ? findMin(root->left) : root;
 }
 
 AVLNode* removeMin(AVLNode* root) {
@@ -84,39 +82,24 @@ AVLNode* removeMin(AVLNode* root) {
 
 AVLNode* removeAVLNode(AVLNode* root, Key* key, void (*deleteOp)(AVLNode*)) {
 	if (NULL == root) { return NULL; }
-
 	if (NULL == key) { return root; }
 
 	switch (compareKeys(root->key, key)) {
-	case 1: {
-			root->left = removeAVLNode(root->left, key,
-									   deleteOp);
-		}
-		break;
+		case 1: root->left = removeAVLNode(root->left, key, deleteOp); break;
+		case -1: root->right = removeAVLNode(root->right, key, deleteOp); break;
+		case 0: 
+				AVLNode* left = root->left;
+				AVLNode* right = root->right;
 
-	case -1: {
-			root->right = removeAVLNode(root->right, key,
-										deleteOp);
-		}
-		break;
+				deleteOp(root);
 
-	case 0: {
-			AVLNode* left = root->left;
-			AVLNode* right = root->right;
+				if (NULL == right) { return left; }
 
-			deleteOp(root);
-
-			if (NULL == right) { return left; }
-
-			AVLNode* min = findMin(right);
-			min->right = removeMin(right);
-			min->left = left;
-			return balance(min);
-		}
-		break;
-
-	default:
-		printf("%s", "Compare error!\n");
+				AVLNode* min = findMin(right);
+				min->right = removeMin(right);
+				min->left = left;
+				return balance(min);
+				break;
 	}
 
 	return balance(root);
@@ -126,25 +109,10 @@ AVLNode* findAVLNode(AVLNode* root, Key* key) {
 	if (NULL == root) { return NULL; }
 
 	AVLNode* result;
-
 	switch (compareKeys(root->key, key)) {
-	case 1: {
-			result = findAVLNode(root->left, key);
-		}
-		break;
-
-	case -1: {
-			result = findAVLNode(root->right, key);
-		}
-		break;
-
-	case 0: {
-			result = root;
-		}
-		break;
-
-	default:
-		printf("%s", "Compare error!\n");
+		case 1: 	result = findAVLNode(root->left, key); break;
+		case -1: 	result = findAVLNode(root->right, key); break;
+		case 0: 	result = root;	break;
 	}
 
 	return result;

@@ -5,8 +5,7 @@
 #include "LinkedListNode.h"
 
 
-char addLinkedListNode(LinkedListNode* root,
-					   LinkedListNode* next) {
+char addLinkedListNode(LinkedListNode* root, LinkedListNode* next) {
 	if (NULL == root)
 	{ return LINKED_LIST_NODE_ROOT_IS_NULL; }
 
@@ -20,11 +19,9 @@ char addLinkedListNode(LinkedListNode* root,
 	return LINKED_LIST_NODE_SUCCESS_OP;
 }
 
-char removeLinkedListNode(LinkedListNode* root,
-						  LinkedListNode* target) {
+char removeLinkedListNode(LinkedListNode* root, LinkedListNode* target) {
 	if (target == root)
 	{ return LINKED_LIST_CANT_REMOVE_ROOT; }
-
 
 	LinkedListNode* currentNode = root;
 

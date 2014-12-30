@@ -51,16 +51,6 @@ char findHashTable(Key* key) {
 	return NULL == result ? FIND_FAIL : FIND_SUCCESS;
 }
 
-/*_____________________________
- * 	    Input      | Result   |
- * source | target |	      |
- * _______|________|__________|
- * found  | !null  | alt_suc  |
- * found  |  null  | rm_suc   |
- * null   |   *    | alt_fail |
- * !found |   *    | alt_fail |
- *____________________________|
- */
 char alterHashTable(Key* source, Key* target) {
 	LinkedListNode* sourceNode;
 
@@ -81,9 +71,6 @@ char alterHashTable(Key* source, Key* target) {
 	case LINKED_LIST_NODE_NOT_FOUND:
 		printf("%s", "Key and node not found!\n");
 		return ALTER_FAIL;
-		break;
-
-	default:
 		break;
 	}
 
@@ -110,17 +97,14 @@ char initHashTable(int size) {
 	int variablesCount[3] = {size, size, 1};
 	char subheapCount = 3;
 
-	if (INITIAL_SUCCESS != init(variablesSize,
-								variablesCount, subheapCount)) {
+	if (INITIAL_SUCCESS != init(variablesSize,	variablesCount, subheapCount)) {
 		printf("%s", "Memory manager can't init\n");
 		exit(-1);
 	}
 
 	hashTableSize = size;
-	hashTable = (LinkedListNode**) allocate(
-					size * sizeof(LinkedListNode*));
+	hashTable = (LinkedListNode**) allocate(size * sizeof(LinkedListNode*));
 
 
-	return (NULL == hashTable) ?
-		   HASH_TABLE_INIT_FAIL : HASH_TABLE_INIT_SUCCESS;
+	return (NULL == hashTable) ? HASH_TABLE_INIT_FAIL : HASH_TABLE_INIT_SUCCESS;
 }

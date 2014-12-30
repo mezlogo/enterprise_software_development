@@ -18,10 +18,8 @@
 
 void initThread(pthread_t* thread, void* (*method)()) {
 	int err = pthread_create(thread, NULL, method, NULL);
-
 	if (err != 0)	{ printf("%s[%s]\n", "Can't create thread: ", strerror(err)); }
 }
-
 
 void initClientServer(int port) {
 	void stClient() {
@@ -48,7 +46,6 @@ void initClientServer(int port) {
 
 #define SENDER_IS_DONE 1
 #define SENDER_ISNT_DONE -1
-
 unsigned char isDone = SENDER_ISNT_DONE;
 unsigned long receiveCount = 0;
 unsigned long sendCount = 0;
@@ -63,23 +60,19 @@ void threadSender() {
 		//Сформировать сообщение и отправить сообщение
 		generateMessage(messageToSend, sendCount + 1);
 		sendMessage(messageToSend);
-
 		sendCount++;
 	}
 
 	printf("sendCount: %lu\n", sendCount);
-
 	isDone = SENDER_IS_DONE;
 }
 
 void threadReceiver() {
 	char messageToReceive[MESSAGE_SIZE];
 	receiveCount = 0;
-	sleep(1);
-
+	
 	//Пока клиент не закончил отправлять пакеты ИЛИ мы не все приняли, обрабатываем
-	while (receiveCount < sendCount ||
-			SENDER_IS_DONE != isDone) {
+	while (receiveCount < sendCount || SENDER_IS_DONE != isDone) {
 		readMessage(messageToReceive);
 		handleMessage(messageToReceive);
 		receiveCount++;

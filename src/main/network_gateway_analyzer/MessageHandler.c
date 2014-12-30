@@ -37,42 +37,35 @@ char handleMessage(char* message) {
 
 	switch (getMessageStatus(message)) {
 
-	case MESSAGE_TYPE_REGULAR: {
-			startTime			= getULongNano();
-			collectionStatus	= collection.find(&primaryKey);
-			measureTime			= calcOffsetULong(startTime);
+		case MESSAGE_TYPE_REGULAR: {
+				startTime			= getULongNano();
+				collectionStatus	= collection.find(&primaryKey);
+				measureTime			= calcOffsetULong(startTime);
 
-			if (FIND_SUCCESS == collectionStatus)	{
-				//kLog("Success find", &primaryKey);
-				logPrimary(measureTime);
-
-			} else {
-				kLog("Unsuccess find", &primaryKey);
+				if (FIND_SUCCESS == collectionStatus) logPrimary(measureTime);
+				else kLog("Unsuccess find", &primaryKey);
+				
 			}
-		}
-		break;
+			break;
 
-	case MESSAGE_TYPE_ALTER: {
-			getSecondKey(&secondKey, message);
+		case MESSAGE_TYPE_ALTER: {
+				getSecondKey(&secondKey, message);
 
-			startTime 			= getULongNano();
-			collectionStatus 	= collection.alter(&primaryKey,
-												   &secondKey);
-			measureTime			= calcOffsetULong(startTime);
+				startTime 			= getULongNano();
+				collectionStatus 	= collection.alter(&primaryKey,
+													   &secondKey);
+				measureTime			= calcOffsetULong(startTime);
 
-			if (ALTER_SUCCESS != collectionStatus) {
-				dkLog("Unsuccess alter", &primaryKey, &secondKey);
-
-			} else {
-				//dkLog("Success alter", &primaryKey, &secondKey);
-				logSecondary(measureTime);
+				if (ALTER_SUCCESS != collectionStatus) 
+					dkLog("Unsuccess alter", &primaryKey, &secondKey);
+				else logSecondary(measureTime);
+				
 			}
-		}
-		break;
+			break;
 
-	default:
-		printf("%s", "Invalid message type\n");
-		return MESSAGE_INVALID;
+		default:
+			printf("%s", "Invalid message type\n");
+			return MESSAGE_INVALID;
 	}
 
 	return MESSAGE_VALID;

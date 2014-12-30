@@ -2,7 +2,6 @@
 #include "Configuration.h"
 
 #define BILLON 1000000000
-
 unsigned long getULongNano() {
 	struct timespec currentTime;
 	clock_gettime(TIMER_ABSTIME, &currentTime);
@@ -18,9 +17,7 @@ unsigned char getUCharNano() {
 	return (unsigned char) getULongNano();
 }
 
-unsigned long calcOffsetULong(unsigned long
-							  start) {
+unsigned long calcOffsetULong(unsigned long start) {
 	unsigned long end = getULongNano();
-	return start < end ? end - start : end + BILLON -
-		   start;
+	return start < end ? end - start : end + BILLON - start;
 }

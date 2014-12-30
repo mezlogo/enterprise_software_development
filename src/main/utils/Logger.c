@@ -26,15 +26,13 @@ void logSecondary(unsigned long time) {
 	secondaryMeasuring[secondaryIndex++] = time;
 }
 
-void printArray(unsigned long* array,
-				long length) {
+void printArray(unsigned long* array, long length) {
 	long index = 0;
 
 	for (; index < length; index++) { printf("%lu ", array[index]); }
 }
 
-unsigned long sum(unsigned long* array,
-				  long length) {
+unsigned long sum(unsigned long* array, long length) {
 	unsigned long result = 0;
 	long index = 0;
 
@@ -44,8 +42,7 @@ unsigned long sum(unsigned long* array,
 	return result;
 }
 
-unsigned long min(unsigned long* array,
-				  long length) {
+unsigned long min(unsigned long* array, long length) {
 	unsigned long result = array[0];
 	long index = 0;
 
@@ -89,22 +86,9 @@ void fileLoggerOutput(char* name, unsigned long* array, unsigned long length, ch
 	fclose(file);
 }
 
-void consoleLoggerOutput(char* name, unsigned long* array,	unsigned long length,
-						 char* measuringName, unsigned long maxValue, unsigned long averageValue, unsigned long minValue)  {
-	printf("\n%s%s%lu\n", measuringName, "\nCount: ", length);
-	printArray(array, length);
-	printf("%s%lu%s%lu%s%lu\n", "\nMin: ", minValue, "\nMax: ", maxValue, "\nAvg: ", averageValue);
-}
-
 void (*showMeasure)(char* name, unsigned long* array,	unsigned long length, char* measuringName,
-					unsigned long maxValue, unsigned long averageValue, unsigned long minValue) = &consoleLoggerOutput;
+					unsigned long maxValue, unsigned long averageValue, unsigned long minValue) = &fileLoggerOutput;
 
-void setShowMeasure(void (*_showMeasure)(char* name, unsigned long* array,	unsigned long length,
-					char* measuringName, unsigned long maxValue, unsigned long averageValue, unsigned long minValue)) {
-	showMeasure = _showMeasure;
-}
-
-void setFileLoggerOutput() { showMeasure = &fileLoggerOutput; }
 
 void show(char* name) {
 #define calcAndShow(name, array, length, measuringName) showMeasure(name, array, length, measuringName, max(array, length), sum(array, length) / (0 == length ? 1 : length), min(array,	length))
